@@ -2,13 +2,9 @@ import { searchProducts } from '@/actions/shop/products/searchProducts'
 import ProductGrid from '@/components/shop/products/ProductGrid'
 import SearchQueryBadge from '@/components/shop/search/SearchQueryBadge';
 import { EmptyProducts } from '@/components/ui/EmptyProducts';
-import React from 'react'
 
 interface Props {
-  // params: Promise<{
-  // genero?: string
-  // category: string  // category es opcional
-  // }>,
+
   searchParams: Promise<{
     query?: string;
     genero?: string;

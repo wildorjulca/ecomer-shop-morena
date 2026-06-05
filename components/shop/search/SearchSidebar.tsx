@@ -8,20 +8,8 @@ import { SubCategoryDropdown } from './ShopWithSidebar/SubCategoryDropdown'
 import { useEffect, useState } from 'react'
 import { getSearchSidebar } from '@/actions/shop/search/getSearchSidebar'
 
-// interface Props {
-// genders: Gender[]
-// categories: Categories[]
-// subcategorias: Subcategorias[]
-
-// currentCategory: string
-// subcategorias: Subcategorias[]
-// marcas: Marca[]
-// tallas: Talla[]
-// colores: Color[]
-// }
 
 const SearchSidebar = () => {
-    const pathname = usePathname()
     const searchParams = useSearchParams()
 
     const categoria = searchParams.get("categoria");
@@ -42,8 +30,8 @@ const SearchSidebar = () => {
         const categorias =
             searchParams.get('categoria') ?? ""
 
-        const subcategorias =
-            searchParams.get('subcategoria')?.split(',') || []
+        // const subcategorias =
+        //     searchParams.get('subcategoria')?.split(',') || []
 
         const loadData = async () => {
 
@@ -54,7 +42,6 @@ const SearchSidebar = () => {
 
             )
 
-            console.log(res)
 
             setData(res)
         }

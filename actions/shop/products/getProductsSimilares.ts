@@ -2,32 +2,34 @@
 
 import { prisma } from "@/libs"
 
-export const getProductsSimilares = async (subcategoria: string, genero: string) => {
-    try {
-        // const where: productoWhereInput = {
-        //        activo: true,
-        //        genero: {
-        //            slug: genderSlug,
-        //        },
-        //        subcategoria: {
-        //            // slug: categorySlug,
-        //            categoria: {
-        //                slug: categorySlug,
-        //            },
-        //        }
-        //    }
+type Talla = {
+    id: number
+    valor: string
+    stock: number
+    disponible: boolean
+}
 
-        //    if (subcategoriaSlug) {
-        //        where.subcategoria!.slug = subcategoriaSlug
-        //    }
+type Color = {
+    id: number
+    nombre: string
+    codigo_hex: string
+    tallas: Talla[]
+}
+
+export const getProductsSimilares = async (
+    subcategoria: string,
+    genero: string
+) => {
+    try {
 
         const products = await prisma.producto.findMany({
             where: {
+                activo: true,
                 subcategoria: {
                     slug: subcategoria
                 },
                 genero: {
-                    slug: genero,
+                    slug: genero
                 }
             },
             select: {
@@ -49,21 +51,24 @@ export const getProductsSimilares = async (subcategoria: string, genero: string)
 
                 variante: {
                     select: {
+                        cantidad_stock: true,
+
                         color: {
                             select: {
                                 id: true,
                                 nombre: true,
                                 codigo_hex: true
                             }
+                        },
+
+                        talla: {
+                            select: {
+                                id: true,
+                                valor: true
+                            }
                         }
                     }
-                },
-                // wishlist: userId ?
-                //     {
-                //         where:
-                //             { usuario_id: userId },
-                //         select: { id: true }
-                //     } : false
+                }
             },
             orderBy: {
                 id: "desc"
@@ -72,20 +77,34 @@ export const getProductsSimilares = async (subcategoria: string, genero: string)
 
         const formatproduct = products.map((p) => {
 
-            // ===============================
-            // COLORES DISPONIBLES
-            // ===============================
-            const coloresMap = new Map()
+            const coloresMap = new Map<number, Color>()
 
             p.variante.forEach((v) => {
-                coloresMap.set(v.color.id, v.color)
+                const colorId = v.color.id
+
+                if (!coloresMap.has(colorId)) {
+                    coloresMap.set(colorId, {
+                        id: v.color.id,
+                        nombre: v.color.nombre,
+                        codigo_hex: v.color.codigo_hex ?? "",
+                        tallas: []
+                    })
+                }
+
+                const colorObj = coloresMap.get(colorId)!
+
+                if (!colorObj.tallas.find(t => t.id === v.talla.id)) {
+                    colorObj.tallas.push({
+                        id: v.talla.id,
+                        valor: v.talla.valor,
+                        stock: v.cantidad_stock ?? 0,
+                        disponible: (v.cantidad_stock ?? 0) > 0
+                    })
+                }
             })
 
             const colores_disponibles = Array.from(coloresMap.values())
 
-            // ===============================
-            // IMAGEN PRINCIPAL
-            // ===============================
             const imagenPrincipal =
                 p.imagen.find(img => img.es_principal) || p.imagen[0]
 
@@ -95,44 +114,52 @@ export const getProductsSimilares = async (subcategoria: string, genero: string)
                     nombre: p.nombre,
                     slug: p.slug,
                     precio_base_venta: Number(p.precio_base_venta),
-                    precio_descuento: Number(p.precio_descuento),
-                    porcentaje_descuento: Number(p.porcentaje_descuento),
-                    en_oferta: p.en_oferta,
+                    precio_descuento: Number(p.precio_descuento ?? 0),
+                    porcentaje_descuento: Number(p.porcentaje_descuento ?? 0),
+                    en_oferta: p.en_oferta ?? false,
+
                     imagenes: [],
                     color_default: null,
-                    colores_disponibles
+                    colores_disponibles,
+
+                    isFavorite: false
                 }
             }
 
-            const color_default = colores_disponibles.find(
-                c => c.id === imagenPrincipal.colorId
-            )
+            const color_default =
+                colores_disponibles.find(
+                    c => c.id === imagenPrincipal.colorId
+                ) ?? null
 
             const imagenes = p.imagen
                 .filter(img => img.colorId === imagenPrincipal.colorId)
-                .sort((a, b) => Number(b.es_principal) - Number(a.es_principal))
+                .sort(
+                    (a, b) =>
+                        Number(b.es_principal) -
+                        Number(a.es_principal)
+                )
                 .map(img => img.url_imagen)
 
-            // 🔥 REORDENAR COLORES (color actual primero)
             const colores_ordenados = [...colores_disponibles].sort((a, b) => {
                 if (a.id === color_default?.id) return -1
                 if (b.id === color_default?.id) return 1
                 return 0
             })
-            // const isFavorite = userId ? p.wishlist > 0 : false
+
             return {
                 id: p.id,
                 nombre: p.nombre,
                 slug: p.slug,
                 precio_base_venta: Number(p.precio_base_venta),
-                precio_descuento: Number(p.precio_descuento),
-                porcentaje_descuento: Number(p.porcentaje_descuento),
-                en_oferta: p.en_oferta,
-                // isFavorite,
+                precio_descuento: Number(p.precio_descuento ?? 0),
+                porcentaje_descuento: Number(p.porcentaje_descuento ?? 0),
+                en_oferta: p.en_oferta ?? false,
 
                 imagenes,
                 color_default,
-                colores_disponibles: colores_ordenados
+                colores_disponibles: colores_ordenados,
+
+                isFavorite: false
             }
         })
 
@@ -142,11 +169,12 @@ export const getProductsSimilares = async (subcategoria: string, genero: string)
         }
 
     } catch (error) {
-        console.log("Error al obtener los productos similares", error)
+        console.log("Error al obtener productos similares", error)
+
         return {
             ok: false,
-            message: "Error al obtener los productos"
+            products: [],
+            message: "Error al obtener productos similares"
         }
     }
-
 }

@@ -24,13 +24,22 @@ const SuccessPage = async ({ searchParams }: Props) => {
     </div>
   }
 
+
   const pedido = response.pedido
+
+  if (!pedido) {
+    return (
+      <div className='w-full flex justify-center items-center h-full'>
+        <h3>No se econtro su pedido</h3>
+      </div>
+    )
+  }
   return (
     <div className='w-full min-h-screen bg-[#F1F1F1]'>
       <div className='max-w-2xl mx-auto py-8'>
 
         <SuccessPayment
-          pedido={pedido ?? []}
+          pedido={pedido}
         />
         {pedido?.items && pedido.items.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">

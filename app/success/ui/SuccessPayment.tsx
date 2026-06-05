@@ -3,26 +3,10 @@
 import { pedido_estado, pedido_estado_pago } from '@/generated/prisma/enums'
 import Lottie from "lottie-react"
 import successPaymentAnimation from '@/public/success.json'
+import { SuccesPedido } from '@/src/interface/succesOrder'
 
 interface Props {
-    pedido: {
-        id: number
-        codido_pedido: string
-        estado_pedido: pedido_estado | null
-        estado_pago: pedido_estado_pago | null
-        // metodo_pago: pedido_metodo_pago | null
-        total: number
-        items: {
-            id: number
-            nombre: string
-            descripcion: string | null
-            subtotal: number
-            cantidad: number
-            color: string
-            talla: string
-            img: string
-        }[]
-    }
+    pedido: SuccesPedido
 }
 const SuccessPayment = ({ pedido }: Props) => {
     // 🎯 Configuración de estados del pedido

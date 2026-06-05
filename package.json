@@ -1,0 +1,51 @@
+{
+  "name": "ecomer-shop-morena",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@prisma/adapter-mariadb": "^7.7.0",
+    "@prisma/client": "^7.7.0",
+    "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/react-query": "^4.44.0",
+    "bcrypt": "^6.0.0",
+    "clsx": "^2.1.1",
+    "lottie-react": "^2.4.1",
+    "lucide-react": "^1.8.0",
+    "meilisearch": "^0.57.0",
+    "next": "16.2.3",
+    "next-auth": "5.0.0-beta.30",
+    "react": "19.2.4",
+    "react-avatar": "^5.0.4",
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.72.1",
+    "react-icons": "^5.6.0",
+    "react-intersection-observer": "^10.0.3",
+    "sonner": "^2.0.7",
+    "swiper": "^12.1.3",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@prisma/adapter-pg": "^7.7.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^20",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^17.4.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.3",
+    "pg": "^8.20.0",
+    "prisma": "^7.7.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  }
+}

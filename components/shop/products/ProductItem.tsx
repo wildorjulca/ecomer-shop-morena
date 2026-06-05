@@ -101,7 +101,7 @@ const ProductItem = ({ product }: Props) => {
             )}
             {/* ❤️ Favoritos */}
             <AddTofavorites
-              product={product}
+              product_id={product.id}
               isFavorite={product.isFavorite}
             />
 

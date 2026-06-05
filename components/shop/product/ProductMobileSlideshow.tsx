@@ -19,7 +19,7 @@ export const ProductMobileSlideshow = ({ product, images }: Props) => {
         <div className="w-full bg-[#F1F1F1]">
             <AddTofavorites
                 isFavorite={false}
-                product={product}
+                product_id={product.id}
             // producto_id={1}
             />
 

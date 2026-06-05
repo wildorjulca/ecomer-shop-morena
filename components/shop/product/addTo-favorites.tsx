@@ -9,10 +9,10 @@ import { HeartIcon } from 'lucide-react'
 import { useState } from 'react'
 
 interface Props {
-    product: Product,
+    product_id: number,
     isFavorite: boolean   // TODO: recibara como props  si en caso esta coom favorito
 }
-const AddTofavorites = ({ product, isFavorite }: Props) => {
+const AddTofavorites = ({ product_id, isFavorite }: Props) => {
     const queryClient = useQueryClient()
     const { setLoading } = useLoader()
     const [favorite, setFavorite] = useState(isFavorite)
@@ -20,7 +20,7 @@ const AddTofavorites = ({ product, isFavorite }: Props) => {
     const handleAddToFavorites = async () => {
         setLoading(true)
         try {
-            const res = await addToFavorites(product.id)
+            const res = await addToFavorites(product_id)
 
             // 🔥 SOLO cambia si el servidor respondió OK
             if (res?.ok) {

@@ -1,22 +1,24 @@
+export const dynamic = "force-dynamic";
+
 import { searchProducts } from '@/actions/shop/products/searchProducts'
 import ProductGrid from '@/components/shop/products/ProductGrid'
 import SearchQueryBadge from '@/components/shop/search/SearchQueryBadge';
 import { EmptyProducts } from '@/components/ui/EmptyProducts';
 
 interface Props {
-
   searchParams: Promise<{
     query?: string;
     genero?: string;
     categoria?: string;
   }>
 }
+
+
 const SearchPage = async ({ searchParams }: Props) => {
   const { query, genero, categoria } = await searchParams
 
 
 
-  const rowQuery = query?.split(" ")
   const categories = categoria?.split(",") || []
 
   const result = await searchProducts({ query: query ?? "", genero: genero, categoria: categories })

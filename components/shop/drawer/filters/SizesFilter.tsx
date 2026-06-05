@@ -1,8 +1,8 @@
 import { ChevronLeft } from "lucide-react"
 
 import { sizes } from "./filrer.data"
+import { FilterView } from "../../gender/GendeHeaderFilters"
 
-import { FilterView } from "./FiltersDrawer"
 
 interface Props {
   setView: (view: FilterView) => void

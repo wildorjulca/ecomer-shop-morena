@@ -28,7 +28,6 @@ const ProfileForm = ({ profile }: Props) => {
         }
     })
 
-    console.log("profile form", profile)
 
     // 🔥 ESTO ES LO QUE TE FALTA
     // 🔥 ESTO ES LO QUE TE FALTA

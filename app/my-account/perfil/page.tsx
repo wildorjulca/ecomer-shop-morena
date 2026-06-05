@@ -7,16 +7,29 @@ const PerfilPage = async () => {
 
   const session = await auth()
   const email = session?.user?.email ?? ""
+
+
   const resProfile = await getUserProfile(email)
 
 
-  if (!resProfile.ok) {
+
+  if (!resProfile.ok || !resProfile.profile) {
     return (
       <div className='flex items-center justify-center'>
-        <h3 className='text-red-500'>{resProfile.error}</h3>
+        <h3 className='text-red-500'>
+          {"Perfil no encontrado"}
+        </h3>
       </div>
     )
   }
+  // if(!resProfile.profile){
+  //   return (
+  //     <div>
+
+  //     </div>
+  //   )
+  // }
+
 
   return (
     <div>

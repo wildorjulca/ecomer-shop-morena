@@ -137,7 +137,7 @@ export const getDetallePedido = async (codigo_pedido: string) => {
                         }
                     }
                 },
-                direccion: {
+                direccionPedido: {
                     include: {
                         distrito: {
                             include: {
@@ -162,7 +162,8 @@ export const getDetallePedido = async (codigo_pedido: string) => {
         }
 
 
-        const direccion = pedido.direccion
+        const direccion = pedido.direccionPedido
+
 
         const distrito = direccion?.distrito?.nombre
         const provincia = direccion?.distrito?.provincia?.nombre

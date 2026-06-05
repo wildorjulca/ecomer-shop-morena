@@ -9,7 +9,7 @@ import { HeartIcon } from 'lucide-react'
 import { useState } from 'react'
 
 interface Props {
-    product: Product,
+    product: ProductSlug,
     isFavorite: boolean   // TODO: recibara como props  si en caso esta coom favorito
 }
 const AddTofavorites = ({ product, isFavorite }: Props) => {

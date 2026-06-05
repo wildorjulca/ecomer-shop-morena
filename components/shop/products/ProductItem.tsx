@@ -21,7 +21,7 @@ const ProductItem = ({ product }: Props) => {
     product.color_default?.id
   )
 
-  const [tallas, setTallas] = useState<Talla[]>(product.color_default.tallas)
+  const [tallas, setTallas] = useState<Talla[] | null>(product?.color_default?.tallas || null)
 
   // 🖼️ estado de imágenes dinámicas
   const [imagenes, setImagenes] = useState<string[]>(product.imagenes || [])

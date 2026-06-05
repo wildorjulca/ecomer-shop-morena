@@ -7,16 +7,19 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import AddTofavorites from './addTo-favorites';
+import { ProductSlug } from '@/src/interface/ProductSlug';
 interface Props {
+    product: ProductSlug;
     images: string[];
 }
 
-export const ProductMobileSlideshow = ({ images }: Props) => {
+export const ProductMobileSlideshow = ({ product, images }: Props) => {
 
     return (
         <div className="w-full bg-[#F1F1F1]">
             <AddTofavorites
                 isFavorite={false}
+                product={product}
             // producto_id={1}
             />
 

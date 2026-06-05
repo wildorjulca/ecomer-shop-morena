@@ -2,13 +2,13 @@
 
 import { addToFavorites } from '@/actions/shop/product/addToFavorites'
 import { useLoader } from '@/components/provider/LoaderProvider'
-import { Product } from '@/src/interface/products'
+import { ProductSlug } from '@/src/interface/ProductSlug'
 import { useQueryClient } from '@tanstack/react-query'
 import { HeartIcon } from 'lucide-react'
 import { useState } from 'react'
 
 interface Props {
-    product: Product,
+    product: ProductSlug,
     isFavorite: boolean   // TODO: recibara como props  si en caso esta coom favorito
 }
 const AddTofavorites = ({ product, isFavorite }: Props) => {

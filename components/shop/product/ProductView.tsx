@@ -57,6 +57,7 @@ const ProductView = ({ product }: Props) => {
 
             <div className='w-full block md:hidden'>
                 <ProductMobileSlideshow
+                    product={product}
                     images={images}
                 />
             </div>

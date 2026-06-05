@@ -3,6 +3,7 @@
 import { useState } from "react"
 import FiltersDrawer from "../drawer/filters/FiltersDrawer"
 import { ArrowUpDown, ChevronDown, SlidersHorizontal } from "lucide-react"
+import { FilterView } from "../gender/GendeHeaderFilters"
 
 const filters = [
     {
@@ -24,14 +25,14 @@ const filters = [
     
 ]
 
-export type FilterView =
-    | "main"
-    | "brands"
-    | "sizes"
-    | "prices"
-    | "gender"
-    | "colors"
-    | "category"
+// export type FilterView =
+//     | "main"
+//     | "brands"
+//     | "sizes"
+//     | "prices"
+//     | "gender"
+//     | "colors"
+//     | "category"
 
 export default function SearchHeaderFilters() {
 

@@ -143,10 +143,11 @@ export const getProductCategory = async ({
                     precio_base_venta: Number(p.precio_base_venta),
                     precio_descuento: Number(p.precio_descuento),
                     porcentaje_descuento: Number(p.porcentaje_descuento),
-                    en_oferta: p.en_oferta,
+                    en_oferta: p.en_oferta ?? false,
                     imagenes: [],
                     color_default: null,
-                    colores_disponibles
+                    colores_disponibles,
+                    isFavorite: false  //todo: este se va ser con el usuario (auth)
                 }
             }
 
@@ -178,13 +179,17 @@ export const getProductCategory = async ({
                 precio_base_venta: Number(p.precio_base_venta),
                 precio_descuento: Number(p.precio_descuento),
                 porcentaje_descuento: Number(p.porcentaje_descuento),
-                en_oferta: p.en_oferta,
+                en_oferta: p.en_oferta ?? false,
 
                 imagenes,
-                color_default,
+                color_default: color_default ?? null,
 
                 // 🔥 IGUAL ESTRUCTURA
-                colores_disponibles: colores_ordenados
+                colores_disponibles: colores_ordenados,
+
+                isFavorite: false  //todo: este se va ser con el usuario (auth)
+
+
             }
         })
 

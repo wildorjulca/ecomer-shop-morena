@@ -20,7 +20,6 @@ interface Props {
 
 const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
 
-    console.log(images)
 
     const { addProduct, cart } = useCartStore()
     const [quantity, setQuantity] = useState<number>(1)
@@ -158,8 +157,6 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
 
         addProduct(itemProduct)
     }
-
-    console.log(cart)
 
     return (
         <div>

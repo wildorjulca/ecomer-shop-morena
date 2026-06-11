@@ -30,7 +30,6 @@ const GenderPage = async ({ params, searchParams }: Props) => {
     const { brands, categoria, sort } = await searchParams
 
 
-
     const marcas =
         brands?.split(",") || []
 

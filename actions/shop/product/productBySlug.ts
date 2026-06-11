@@ -16,10 +16,13 @@ export const getProductBySlug = async (
     const user = session?.user
     const userId = Number(user?.id)
 
+
+    const decodedSlug = decodeURIComponent(slug).trim().toLocaleLowerCase()
+
     try {
 
         const product = await prisma.producto.findFirst({
-            where: { slug },
+            where: { slug: decodedSlug },
             select: {
                 id: true,
                 nombre: true,
@@ -83,8 +86,6 @@ export const getProductBySlug = async (
                     : false
             }
         })
-
-        console.log(product)
 
         if (!product) {
             return { ok: false, message: "No product" }

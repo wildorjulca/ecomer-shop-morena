@@ -3,9 +3,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDown, User, ShoppingBag, LogOut } from 'lucide-react'
 import { logout } from '@/actions/shop/auth/logout'
+import { useRouter } from 'next/navigation'
 
 export default function AuthenticatedPopover({ name }: { name: string }) {
 
+    const router = useRouter()
     const [open, setOpen] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
 
@@ -61,7 +63,11 @@ export default function AuthenticatedPopover({ name }: { name: string }) {
                     <div className="absolute -top-2 right-4 w-4 h-4 bg-white rotate-45 border-l border-t"></div>
 
                     <div className="p-2">
-                        <button className="w-full flex items-center gap-3 text-black px-4 py-2 text-sm hover:bg-gray-100 transition">
+                        <button
+                            onClick={() => router.push("/my-account/mis-compras")}
+                            className="w-full flex items-center gap-3 text-black px-4 py-2 text-sm hover:bg-gray-100 transition"
+
+                        >
                             <ShoppingBag size={16} />
                             Mis compras
                         </button>

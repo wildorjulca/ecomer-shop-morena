@@ -48,7 +48,7 @@ export default function GenderHeaderFilters() {
                 className="
         sticky
         top-[70px]
-        z-50
+        z-40
         bg-white
         border-t
         border-gray-100

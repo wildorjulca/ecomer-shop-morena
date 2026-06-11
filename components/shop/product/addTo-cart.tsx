@@ -44,7 +44,7 @@ const AddToCart = ({ className, loadingStock, handleAddToCart, quantity, onValue
                     {loadingStock ? (
                         <span className="flex items-center gap-2">
                             <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                            Verificando stock...
+                            Agregando producto...
                         </span>
                     ) : (
                         "Agregar a la bolsa"

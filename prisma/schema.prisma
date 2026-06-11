@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -12,9 +7,416 @@ datasource db {
   provider = "mysql"
 }
 
-// ==============================================
-// ENUMS
-// ==============================================
+model departamento {
+  id        Int         @id @default(autoincrement())
+  nombre    String      @db.VarChar(100)
+  provincia provincia[]
+}
+
+model provincia {
+  id             Int          @id @default(autoincrement())
+  nombre         String       @db.VarChar(100)
+  departamentoId Int
+  distrito       distrito[]
+  departamento   departamento @relation(fields: [departamentoId], references: [id])
+
+  @@index([departamentoId], map: "provincia_departamentoId_fkey")
+}
+
+model distrito {
+  id                  Int                 @id @default(autoincrement())
+  nombre              String              @db.VarChar(100)
+  provinciaId         Int
+  direcciones_usuario direccion_usuario[]
+  provincia           provincia           @relation(fields: [provinciaId], references: [id])
+  direcciones_pedido  pedido_direccion[]
+
+  @@index([provinciaId], map: "distrito_provinciaId_fkey")
+}
+
+model direccion_usuario {
+  id            Int      @id @default(autoincrement())
+  usuario_id    Int
+  nombres       String
+  apellidos     String
+  telefono      String
+  direccion     String
+  distrito_id   Int
+  instrucciones String?
+  es_principal  Boolean? @default(false)
+  distrito      distrito @relation(fields: [distrito_id], references: [id])
+  usuario       usuario  @relation(fields: [usuario_id], references: [id])
+
+  @@index([distrito_id], map: "direccion_usuario_distrito_id_fkey")
+  @@index([usuario_id], map: "direccion_usuario_usuario_id_fkey")
+}
+
+model pedido_direccion {
+  id            Int      @id @default(autoincrement())
+  pedido_id     Int      @unique
+  nombres       String
+  apellidos     String
+  telefono      String
+  direccion     String
+  distrito_id   Int
+  instrucciones String?
+  distrito      distrito @relation(fields: [distrito_id], references: [id])
+  pedido        pedido   @relation(fields: [pedido_id], references: [id])
+
+  @@index([distrito_id], map: "pedido_direccion_distrito_id_fkey")
+}
+
+model categoria {
+  id           Int            @id @default(autoincrement())
+  nombre       String         @unique @db.VarChar(50)
+  slug         String         @unique @db.VarChar(50)
+  descripcion  String?        @db.Text
+  imagen       String?        @db.VarChar(255)
+  activo       Boolean?       @default(true)
+  creado_en    DateTime?      @default(now()) @db.Timestamp(0)
+  subcategoria subcategoria[]
+}
+
+model subcategoria {
+  id          Int        @id @default(autoincrement())
+  nombre      String     @db.VarChar(50)
+  slug        String     @unique @db.VarChar(100)
+  categoriaId Int
+  imagen      String?    @db.VarChar(255)
+  descripcion String?    @db.Text
+  activo      Boolean?   @default(true)
+  creado_en   DateTime?  @default(now()) @db.Timestamp(0)
+  producto    producto[]
+  categoria   categoria  @relation(fields: [categoriaId], references: [id])
+
+  @@unique([nombre, categoriaId])
+  @@index([categoriaId])
+}
+
+model genero {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique @db.VarChar(20)
+  slug      String     @unique @db.VarChar(20)
+  imagen    String?    @db.VarChar(255)
+  activo    Boolean?   @default(true)
+  creado_en DateTime?  @default(now()) @db.Timestamp(0)
+  producto  producto[]
+}
+
+model marca {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique @db.VarChar(50)
+  slug      String     @unique @db.VarChar(50)
+  imagen    String?    @db.VarChar(255)
+  activo    Boolean?   @default(true)
+  creado_en DateTime?  @default(now()) @db.Timestamp(0)
+  producto  producto[]
+}
+
+model producto {
+  id                   Int                 @id @default(autoincrement())
+  nombre               String              @db.VarChar(100)
+  slug                 String              @unique @db.VarChar(100)
+  referencia           String?             @db.VarChar(50)
+  descripcion          String?             @db.Text
+  precio_base_venta    Decimal             @db.Decimal(10, 2)
+  precio_descuento     Decimal?            @db.Decimal(10, 2)
+  porcentaje_descuento Int?                @default(0)
+  en_oferta            Boolean?            @default(false)
+  destacado            Boolean?            @default(false)
+  nuevo                Boolean?            @default(true)
+  rating_promedio      Float?              @default(0)
+  total_vendidos       Int?                @default(0)
+  activo               Boolean?            @default(true)
+  creado_en            DateTime?           @default(now()) @db.Timestamp(0)
+  actualizado_en       DateTime?           @default(now()) @db.Timestamp(0)
+  subcategoriaId       Int
+  generoId             Int
+  marcaId              Int?
+  atributo             atributo_producto[]
+  carrito              carrito[]
+  detalle              detalle_pedido[]
+  genero               genero              @relation(fields: [generoId], references: [id])
+  marca                marca?              @relation(fields: [marcaId], references: [id])
+  subcategoria         subcategoria        @relation(fields: [subcategoriaId], references: [id])
+  imagen               producto_imagen[]
+  resena               resena[]
+  variante             variante_producto[]
+  wishlists            wishlist[]
+
+  @@index([slug])
+  @@index([activo])
+  @@index([subcategoriaId])
+  @@index([marcaId])
+  @@index([generoId])
+}
+
+model atributo_producto {
+  id             Int      @id @default(autoincrement())
+  productoId     Int
+  nombre         String   @db.VarChar(100)
+  valor          String   @db.VarChar(255)
+  orden          Int?     @default(0)
+  especificacion Boolean? @default(false)
+  producto       producto @relation(fields: [productoId], references: [id])
+
+  @@index([productoId])
+}
+
+model color {
+  id         Int                 @id @default(autoincrement())
+  nombre     String              @unique @db.VarChar(50)
+  slug       String              @unique @db.VarChar(50)
+  codigo_hex String?             @default("#CCCCCC") @db.VarChar(7)
+  activo     Boolean?            @default(true)
+  imagen     producto_imagen[]
+  variante   variante_producto[]
+}
+
+model tipo_talla {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique @db.VarChar(50)
+  activo      Boolean? @default(true)
+  descripcion String?  @db.Text
+  talla       talla[]
+}
+
+model talla {
+  id          Int                 @id @default(autoincrement())
+  valor       String              @db.VarChar(10)
+  tipoTallaId Int
+  activo      Boolean?            @default(true)
+  tipoTalla   tipo_talla          @relation(fields: [tipoTallaId], references: [id])
+  variante    variante_producto[]
+
+  @@unique([valor, tipoTallaId])
+  @@index([tipoTallaId], map: "talla_tipoTallaId_fkey")
+}
+
+model variante_producto {
+  id                Int               @id @default(autoincrement())
+  productoId        Int
+  colorId           Int
+  tallaId           Int
+  sku               String?           @unique @db.VarChar(255)
+  codigo_barras     String?           @db.VarChar(50)
+  precio_extra      Decimal?          @default(0.00) @db.Decimal(8, 2)
+  costo_compra      Decimal?          @default(0.00) @db.Decimal(10, 2)
+  cantidad_stock    Int?              @default(0)
+  stock_minimo      Int?              @default(5)
+  peso              Decimal?          @db.Decimal(10, 2)
+  dimensiones       String?           @db.VarChar(100)
+  ubicacion_almacen String?           @db.VarChar(50)
+  activo            Boolean?          @default(true)
+  creado_en         DateTime?         @default(now()) @db.Timestamp(0)
+  actualizado_en    DateTime?         @default(now()) @db.Timestamp(0)
+  carrito           carrito[]
+  detalle           detalle_pedido[]
+  historial         historial_stock[]
+  color             color             @relation(fields: [colorId], references: [id])
+  producto          producto          @relation(fields: [productoId], references: [id])
+  talla             talla             @relation(fields: [tallaId], references: [id])
+
+  @@unique([productoId, colorId, tallaId])
+  @@index([productoId])
+  @@index([colorId])
+  @@index([tallaId])
+  @@index([cantidad_stock])
+  @@index([sku])
+}
+
+model historial_stock {
+  id                Int               @id @default(autoincrement())
+  varianteId        Int
+  tipo_movimiento   String
+  cantidad          Int
+  cantidad_anterior Int
+  cantidad_nueva    Int
+  motivo            String?           @db.VarChar(255)
+  usuarioId         Int?
+  creado_en         DateTime?         @default(now()) @db.Timestamp(0)
+  usuario           usuario?          @relation(fields: [usuarioId], references: [id])
+  variante          variante_producto @relation(fields: [varianteId], references: [id])
+
+  @@index([varianteId])
+  @@index([creado_en])
+  @@index([usuarioId], map: "historial_stock_usuarioId_fkey")
+}
+
+model producto_imagen {
+  id           Int       @id @default(autoincrement())
+  productoId   Int
+  colorId      Int
+  url_imagen   String    @db.VarChar(255)
+  orden        Int?      @default(0)
+  es_principal Boolean?  @default(false)
+  creado_en    DateTime? @default(now()) @db.Timestamp(0)
+  color        color     @relation(fields: [colorId], references: [id])
+  producto     producto  @relation(fields: [productoId], references: [id])
+
+  @@index([productoId])
+  @@index([colorId])
+  @@index([productoId, colorId])
+  @@index([es_principal])
+}
+
+model usuario {
+  id                  Int                     @id @default(autoincrement())
+  nombre              String                  @db.VarChar(100)
+  apellido            String?                 @db.VarChar(100)
+  email               String                  @unique @db.VarChar(100)
+  password_hash       String?                 @db.VarChar(255)
+  telefono            String?                 @db.VarChar(20)
+  documento_tipo      usuario_documento_tipo? @default(DNI)
+  documento_numero    String?                 @db.VarChar(20)
+  genero              usuario_genero?
+  avatar              String?                 @db.VarChar(255)
+  rol                 usuario_rol?            @default(cliente)
+  email_verificado    Boolean?                @default(false)
+  activo              Boolean?                @default(true)
+  creado_en           DateTime?               @default(now()) @db.Timestamp(0)
+  actualizado_en      DateTime?               @default(now()) @db.Timestamp(0)
+  ultimo_login        DateTime?               @db.Timestamp(0)
+  carrito             carrito[]
+  direcciones_usuario direccion_usuario[]
+  historialPedidos    historial_pedido[]
+  historial           historial_stock[]
+  pedido              pedido[]
+  resena              resena[]
+  wishlists           wishlist[]
+
+  @@index([email])
+  @@index([rol])
+  @@index([activo])
+}
+
+model wishlist {
+  id          Int       @id @default(autoincrement())
+  usuario_id  Int
+  producto_id Int
+  agregado_en DateTime? @default(now()) @db.Timestamp(0)
+  usuario     usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "wishlist_ibfk_1")
+  producto    producto  @relation(fields: [producto_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "wishlist_ibfk_2")
+
+  @@unique([usuario_id, producto_id], map: "uk_usuario_producto")
+  @@index([producto_id], map: "idx_producto")
+  @@index([usuario_id], map: "idx_usuario")
+}
+
+model carrito {
+  id          Int               @id @default(autoincrement())
+  usuarioId   Int
+  varianteId  Int
+  cantidad    Int               @default(1)
+  agregado_en DateTime?         @default(now()) @db.Timestamp(0)
+  productoId  Int?
+  producto    producto?         @relation(fields: [productoId], references: [id])
+  usuario     usuario           @relation(fields: [usuarioId], references: [id])
+  variante    variante_producto @relation(fields: [varianteId], references: [id])
+
+  @@unique([usuarioId, varianteId])
+  @@index([usuarioId])
+  @@index([varianteId])
+  @@index([productoId], map: "carrito_productoId_fkey")
+}
+
+model pedido {
+  id              Int                @id @default(autoincrement())
+  codigo_pedido   String             @unique @db.VarChar(20)
+  usuarioId       Int
+  subtotal        Decimal            @db.Decimal(10, 2)
+  costo_envio     Decimal?           @default(0.00) @db.Decimal(8, 2)
+  descuento       Decimal?           @default(0.00) @db.Decimal(8, 2)
+  igv             Decimal?           @default(0.00) @db.Decimal(8, 2)
+  total           Decimal            @db.Decimal(10, 2)
+  estado          pedido_estado      @default(pendiente)
+  estado_pago     pedido_estado_pago @default(pendiente)
+  metodo_pago     String?            @db.VarChar(50)
+  tracking        String?            @db.VarChar(100)
+  notas           String?            @db.Text
+  creado_en       DateTime?          @default(now()) @db.Timestamp(0)
+  actualizado_en  DateTime?          @default(now()) @db.Timestamp(0)
+  detalle         detalle_pedido[]
+  historial       historial_pedido[]
+  usuario         usuario            @relation(fields: [usuarioId], references: [id])
+  direccionPedido pedido_direccion?
+  resena          resena[]
+  transaccion     transaccion_pago[]
+
+  @@index([codigo_pedido])
+  @@index([usuarioId])
+  @@index([estado])
+  @@index([creado_en])
+}
+
+model detalle_pedido {
+  id                 Int               @id @default(autoincrement())
+  pedidoId           Int
+  varianteId         Int
+  cantidad           Int
+  precio_unitario    Decimal           @db.Decimal(10, 2)
+  descuento_aplicado Decimal?          @default(0.00) @db.Decimal(10, 2)
+  subtotal           Decimal           @db.Decimal(10, 2)
+  productoId         Int?
+  pedido             pedido            @relation(fields: [pedidoId], references: [id])
+  producto           producto?         @relation(fields: [productoId], references: [id])
+  variante           variante_producto @relation(fields: [varianteId], references: [id])
+
+  @@index([pedidoId])
+  @@index([varianteId])
+  @@index([productoId], map: "detalle_pedido_productoId_fkey")
+}
+
+model historial_pedido {
+  id        Int       @id @default(autoincrement())
+  pedidoId  Int
+  estado    String    @db.VarChar(50)
+  notas     String?   @db.Text
+  usuarioId Int?
+  creado_en DateTime? @default(now()) @db.Timestamp(0)
+  pedido    pedido    @relation(fields: [pedidoId], references: [id])
+  usuario   usuario?  @relation(fields: [usuarioId], references: [id])
+
+  @@index([pedidoId])
+  @@index([usuarioId], map: "historial_pedido_usuarioId_fkey")
+}
+
+model transaccion_pago {
+  id          Int       @id @default(autoincrement())
+  pedidoId    Int
+  metodo_pago String    @db.VarChar(50)
+  codigo      String?   @db.VarChar(100)
+  monto       Decimal   @db.Decimal(10, 2)
+  estado      String    @db.VarChar(50)
+  respuesta   String?   @db.Text
+  fecha       DateTime? @default(now()) @db.Timestamp(0)
+  pedido      pedido    @relation(fields: [pedidoId], references: [id])
+
+  @@index([pedidoId])
+}
+
+model resena {
+  id           Int       @id @default(autoincrement())
+  productoId   Int
+  usuarioId    Int
+  pedidoId     Int?
+  calificacion Int       @default(5)
+  titulo       String?   @db.VarChar(150)
+  comentario   String?   @db.Text
+  ventajas     String?   @db.Text
+  desventajas  String?   @db.Text
+  aprobado     Boolean?  @default(false)
+  creado_en    DateTime? @default(now()) @db.Timestamp(0)
+  pedido       pedido?   @relation(fields: [pedidoId], references: [id])
+  producto     producto  @relation(fields: [productoId], references: [id])
+  usuario      usuario   @relation(fields: [usuarioId], references: [id])
+
+  @@index([productoId])
+  @@index([usuarioId])
+  @@index([aprobado])
+  @@index([calificacion])
+  @@index([pedidoId], map: "resena_pedidoId_fkey")
+}
 
 enum pedido_estado {
   pendiente
@@ -51,535 +453,4 @@ enum usuario_documento_tipo {
   CE
   PASAPORTE
   RUC
-}
-
-// ==============================================
-// UBICACIÓN (departamento -> provincia -> distrito)
-// ==============================================
-
-model departamento {
-  id        Int         @id @default(autoincrement())
-  nombre    String      @db.VarChar(100)
-  provincia provincia[]
-}
-
-model provincia {
-  id             Int          @id @default(autoincrement())
-  nombre         String       @db.VarChar(100)
-  departamentoId Int
-  departamento   departamento @relation(fields: [departamentoId], references: [id])
-  distrito       distrito[]
-}
-
-model distrito {
-  id                  Int                 @id @default(autoincrement())
-  nombre              String              @db.VarChar(100)
-  provinciaId         Int
-  provincia           provincia           @relation(fields: [provinciaId], references: [id])
-  direcciones_usuario direccion_usuario[]
-  direcciones_pedido  pedido_direccion[]
-}
-
-// ==============================================
-// DIRECCIONES
-// ==============================================
-model direccion_usuario {
-  id            Int     @id @default(autoincrement())
-  usuario_id    Int
-  nombres       String
-  apellidos     String
-  telefono      String
-  direccion     String
-  distrito_id   Int
-  instrucciones String?
-
-  es_principal Boolean? @default(false)
-
-  usuario  usuario  @relation(fields: [usuario_id], references: [id])
-  distrito distrito @relation(fields: [distrito_id], references: [id])
-}
-
-model pedido_direccion {
-  id            Int     @id @default(autoincrement())
-  pedido_id     Int     @unique
-  nombres       String
-  apellidos     String
-  telefono      String
-  direccion     String
-  distrito_id   Int
-  instrucciones String?
-
-  pedido   pedido   @relation(fields: [pedido_id], references: [id])
-  distrito distrito @relation(fields: [distrito_id], references: [id])
-}
-
-// model direccion_envio {
-//   id            Int     @id @default(autoincrement())
-//   usuario_id    Int
-//   nombres       String  @db.VarChar(100)
-//   apellidos     String  @db.VarChar(200)
-//   telefono      String  @db.VarChar(20)
-//   direccion     String  @db.Text
-//   distrito_id   Int
-//   instrucciones String? @db.Text
-
-//   // referencia     String?       @db.Text
-//   es_principal Boolean?  @default(false)
-//   activo       Boolean?  @default(true)
-//   creado_en    DateTime? @default(now()) @db.Timestamp(0)
-//   usuario      usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "direccion_envio_ibfk_1")
-//   distrito     distrito  @relation(fields: [distrito_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "direccion_envio_ibfk_2")
-//   pedido       pedido[]
-//   // departamento   departamento? @relation(fields: [departamentoId], references: [id])
-//   // departamentoId Int?
-//   // provincia      provincia?    @relation(fields: [provinciaId], references: [id])
-//   // provinciaId    Int?
-//   // departamento   departamento? @relation(fields: [departamentoId], references: [id])
-//   // departamentoId Int?
-//   // provincia      provincia?    @relation(fields: [provinciaId], references: [id])
-//   // provinciaId    Int?
-//   // departamento   departamento? @relation(fields: [departamentoId], references: [id])
-//   // departamentoId Int?
-//   // provincia      provincia?    @relation(fields: [provinciaId], references: [id])
-//   // provinciaId    Int?
-
-//   @@index([distrito_id], map: "idx_distrito")
-//   @@index([es_principal], map: "idx_principal")
-//   @@index([usuario_id], map: "idx_usuario")
-// }
-
-// model direccion_envio {
-//   id           Int       @id @default(autoincrement())
-//   usuario_id   Int
-//   nombres      String    @db.VarChar(100)
-//   apellidos    String    @db.VarChar(200)
-//   telefono     String    @db.VarChar(20)
-//   direccion    String    @db.Text
-//   distrito_id  Int
-//   referencia   String?   @db.Text
-
-//   alias        String?   @db.VarChar(50)
-//   instrucciones String?  @db.Text
-//   codigo_postal String?  @db.VarChar(10)
-
-//   latitud      Decimal?  @db.Decimal(10, 7)
-//   longitud     Decimal?  @db.Decimal(10, 7)
-
-//   es_principal Boolean?  @default(false)
-//   activo       Boolean?  @default(true)
-//   creado_en    DateTime? @default(now()) @db.Timestamp(0)
-
-//   usuario   usuario  @relation(fields: [usuario_id], references: [id])
-//   distrito  distrito @relation(fields: [distrito_id], references: [id])
-//   pedido    pedido[]
-
-//   @@index([usuario_id])
-//   @@index([distrito_id])
-// }
-
-// ==============================================
-// CATEGORÍAS Y SUBCATEGORÍAS (BIEN NORMALIZADO)
-// ==============================================
-
-model categoria {
-  id           Int            @id @default(autoincrement())
-  nombre       String         @unique @db.VarChar(50)
-  slug         String         @unique @db.VarChar(50)
-  descripcion  String?        @db.Text
-  imagen       String?        @db.VarChar(255)
-  activo       Boolean?       @default(true)
-  creado_en    DateTime?      @default(now()) @db.Timestamp(0)
-  subcategoria subcategoria[]
-}
-
-model subcategoria {
-  id          Int        @id @default(autoincrement())
-  nombre      String     @db.VarChar(50)
-  slug        String     @unique @db.VarChar(100)
-  categoriaId Int
-  imagen      String?    @db.VarChar(255)
-  descripcion String?    @db.Text
-  activo      Boolean?   @default(true)
-  creado_en   DateTime?  @default(now()) @db.Timestamp(0)
-  categoria   categoria  @relation(fields: [categoriaId], references: [id])
-  producto    producto[]
-
-  @@unique([nombre, categoriaId])
-  @@index([categoriaId])
-}
-
-// ==============================================
-// GENEROS Y MARCAS
-// ==============================================
-
-model genero {
-  id        Int        @id @default(autoincrement())
-  nombre    String     @unique @db.VarChar(20)
-  slug      String     @unique @db.VarChar(20)
-  imagen    String?    @db.VarChar(255)
-  activo    Boolean?   @default(true)
-  creado_en DateTime?  @default(now()) @db.Timestamp(0)
-  producto  producto[]
-}
-
-model marca {
-  id        Int        @id @default(autoincrement())
-  nombre    String     @unique @db.VarChar(50)
-  slug      String     @unique @db.VarChar(50)
-  imagen    String?    @db.VarChar(255)
-  activo    Boolean?   @default(true)
-  creado_en DateTime?  @default(now()) @db.Timestamp(0)
-  producto  producto[]
-}
-
-// ==============================================
-// PRODUCTO (AHORA SOLO CON subcategoriaId)
-// ==============================================
-
-model producto {
-  id                   Int       @id @default(autoincrement())
-  nombre               String    @db.VarChar(100)
-  slug                 String    @unique @db.VarChar(100)
-  referencia           String?   @db.VarChar(50)
-  descripcion          String?   @db.Text
-  precio_base_venta    Decimal   @db.Decimal(10, 2)
-  precio_descuento     Decimal?  @db.Decimal(10, 2)
-  porcentaje_descuento Int?      @default(0)
-  en_oferta            Boolean?  @default(false)
-  destacado            Boolean?  @default(false)
-  nuevo                Boolean?  @default(true)
-  rating_promedio      Float?    @default(0)
-  total_vendidos       Int?      @default(0)
-  activo               Boolean?  @default(true)
-  creado_en            DateTime? @default(now()) @db.Timestamp(0)
-  actualizado_en       DateTime? @default(now()) @db.Timestamp(0)
-
-  // ✅ SOLO guardamos subcategoriaId (la categoría se obtiene por relación)
-  subcategoriaId Int
-  generoId       Int
-  marcaId        Int?
-
-  subcategoria subcategoria @relation(fields: [subcategoriaId], references: [id])
-  genero       genero       @relation(fields: [generoId], references: [id])
-  marca        marca?       @relation(fields: [marcaId], references: [id])
-
-  variante  variante_producto[]
-  imagen    producto_imagen[]
-  atributo  atributo_producto[]
-  resena    resena[]
-  carrito   carrito[]
-  detalle   detalle_pedido[]
-  // tipoTalla    tipo_talla?         @relation(fields: [tipo_tallaId], references: [id])
-  // tipo_tallaId Int?
-  // tipoTalla    tipo_talla?         @relation(fields: [tipo_tallaId], references: [id])
-  // tipo_tallaId Int?
-  wishlists wishlist[]
-
-  @@index([slug])
-  @@index([activo])
-  @@index([subcategoriaId])
-  @@index([marcaId])
-  @@index([generoId])
-}
-
-model atributo_producto {
-  id             Int      @id @default(autoincrement())
-  productoId     Int
-  nombre         String   @db.VarChar(100)
-  valor          String   @db.VarChar(255)
-  orden          Int?     @default(0)
-  especificacion Boolean? @default(false)
-  producto       producto @relation(fields: [productoId], references: [id])
-
-  @@index([productoId])
-}
-
-// ==============================================
-// COLOR, TALLA, VARIANTE (COMBINACIÓN)
-// ==============================================
-
-model color {
-  id         Int                 @id @default(autoincrement())
-  nombre     String              @unique @db.VarChar(50)
-  slug       String              @unique @db.VarChar(50)
-  codigo_hex String?             @default("#CCCCCC") @db.VarChar(7)
-  activo     Boolean?            @default(true)
-  variante   variante_producto[]
-  imagen     producto_imagen[]
-}
-
-model tipo_talla {
-  id          Int      @id @default(autoincrement())
-  nombre      String   @unique @db.VarChar(50)
-  descripcion String?  @db.Text
-  activo      Boolean? @default(true)
-
-  talla talla[]
-  // productos producto[]
-}
-
-model talla {
-  id          Int      @id @default(autoincrement())
-  valor       String   @db.VarChar(10)
-  tipoTallaId Int
-  activo      Boolean? @default(true)
-
-  tipoTalla tipo_talla          @relation(fields: [tipoTallaId], references: [id])
-  variante  variante_producto[]
-
-  @@unique([valor, tipoTallaId])
-}
-
-model variante_producto {
-  id                Int       @id @default(autoincrement())
-  productoId        Int
-  colorId           Int
-  tallaId           Int
-  sku               String?   @unique @db.VarChar(255)
-  codigo_barras     String?   @db.VarChar(50)
-  precio_extra      Decimal?  @default(0.00) @db.Decimal(8, 2)
-  costo_compra      Decimal?  @default(0.00) @db.Decimal(10, 2)
-  cantidad_stock    Int?      @default(0)
-  stock_minimo      Int?      @default(5)
-  peso              Decimal?  @db.Decimal(10, 2)
-  dimensiones       String?   @db.VarChar(100)
-  ubicacion_almacen String?   @db.VarChar(50)
-  activo            Boolean?  @default(true)
-  creado_en         DateTime? @default(now()) @db.Timestamp(0)
-  actualizado_en    DateTime? @default(now()) @db.Timestamp(0)
-
-  producto producto @relation(fields: [productoId], references: [id])
-  color    color    @relation(fields: [colorId], references: [id])
-  talla    talla    @relation(fields: [tallaId], references: [id])
-
-  carrito   carrito[]
-  detalle   detalle_pedido[]
-  historial historial_stock[]
-
-  @@unique([productoId, colorId, tallaId])
-  @@index([productoId])
-  @@index([colorId])
-  @@index([tallaId])
-  @@index([cantidad_stock])
-  @@index([sku])
-}
-
-model historial_stock {
-  id                Int       @id @default(autoincrement())
-  varianteId        Int
-  tipo_movimiento   String // ENTRADA, SALIDA, AJUSTE, etc.
-  cantidad          Int
-  cantidad_anterior Int
-  cantidad_nueva    Int
-  motivo            String?   @db.VarChar(255)
-  usuarioId         Int?
-  creado_en         DateTime? @default(now()) @db.Timestamp(0)
-
-  variante variante_producto @relation(fields: [varianteId], references: [id])
-  usuario  usuario?          @relation(fields: [usuarioId], references: [id])
-
-  @@index([varianteId])
-  @@index([creado_en])
-}
-
-// ==============================================
-// IMÁGENES POR PRODUCTO Y COLOR
-// ==============================================
-
-model producto_imagen {
-  id           Int       @id @default(autoincrement())
-  productoId   Int
-  colorId      Int
-  url_imagen   String    @db.VarChar(255)
-  orden        Int?      @default(0)
-  es_principal Boolean?  @default(false)
-  creado_en    DateTime? @default(now()) @db.Timestamp(0)
-
-  producto producto @relation(fields: [productoId], references: [id])
-  color    color    @relation(fields: [colorId], references: [id])
-
-  @@index([productoId])
-  @@index([colorId])
-  @@index([productoId, colorId])
-  @@index([es_principal])
-}
-
-// ==============================================
-// USUARIO Y AUTENTICACIÓN
-// ==============================================
-
-model usuario {
-  id               Int                     @id @default(autoincrement())
-  nombre           String                  @db.VarChar(100)
-  apellido         String?                 @db.VarChar(100)
-  email            String                  @unique @db.VarChar(100)
-  password_hash    String?                 @db.VarChar(255)
-  telefono         String?                 @db.VarChar(20)
-  documento_tipo   usuario_documento_tipo? @default(DNI)
-  documento_numero String?                 @db.VarChar(20)
-  genero           usuario_genero?
-  avatar           String?                 @db.VarChar(255)
-  rol              usuario_rol?            @default(cliente)
-  email_verificado Boolean?                @default(false)
-  activo           Boolean?                @default(true)
-  creado_en        DateTime?               @default(now()) @db.Timestamp(0)
-  actualizado_en   DateTime?               @default(now()) @db.Timestamp(0)
-  ultimo_login     DateTime?               @db.Timestamp(0)
-
-  // direccion        direccion_envio[]
-  direcciones_usuario direccion_usuario[]
-  carrito             carrito[]
-  pedido              pedido[]
-  resena              resena[]
-  historial           historial_stock[]
-  historialPedidos    historial_pedido[]
-  wishlists           wishlist[]
-
-  @@index([email])
-  @@index([rol])
-  @@index([activo])
-}
-
-model wishlist {
-  id          Int       @id @default(autoincrement())
-  usuario_id  Int
-  producto_id Int
-  agregado_en DateTime? @default(now()) @db.Timestamp(0)
-  usuario     usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "wishlist_ibfk_1")
-  producto    producto  @relation(fields: [producto_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "wishlist_ibfk_2")
-
-  @@unique([usuario_id, producto_id], map: "uk_usuario_producto")
-  @@index([producto_id], map: "idx_producto")
-  @@index([usuario_id], map: "idx_usuario")
-}
-
-// ==============================================
-// CARRITO DE COMPRAS
-// ==============================================
-
-model carrito {
-  id          Int       @id @default(autoincrement())
-  usuarioId   Int
-  varianteId  Int
-  cantidad    Int       @default(1)
-  agregado_en DateTime? @default(now()) @db.Timestamp(0)
-
-  usuario    usuario           @relation(fields: [usuarioId], references: [id])
-  variante   variante_producto @relation(fields: [varianteId], references: [id])
-  producto   producto?         @relation(fields: [productoId], references: [id])
-  productoId Int?
-
-  @@unique([usuarioId, varianteId])
-  @@index([usuarioId])
-  @@index([varianteId])
-}
-
-// ==============================================
-// PEDIDOS
-// ==============================================
-
-model pedido {
-  id              Int                @id @default(autoincrement())
-  codigo_pedido   String             @unique @db.VarChar(20)
-  usuarioId       Int
-  subtotal        Decimal            @db.Decimal(10, 2)
-  costo_envio     Decimal?           @default(0.00) @db.Decimal(8, 2)
-  descuento       Decimal?           @default(0.00) @db.Decimal(8, 2)
-  igv             Decimal?           @default(0.00) @db.Decimal(8, 2)
-  total           Decimal            @db.Decimal(10, 2)
-  estado          pedido_estado      @default(pendiente)
-  estado_pago     pedido_estado_pago @default(pendiente)
-  metodo_pago     String?            @db.VarChar(50)
-  tracking        String?            @db.VarChar(100)
-  notas           String?            @db.Text
-  creado_en       DateTime?          @default(now()) @db.Timestamp(0)
-  actualizado_en  DateTime?          @default(now()) @db.Timestamp(0)
-  direccionPedido pedido_direccion?
-  // direccion_envio_id Int?
-
-  usuario     usuario            @relation(fields: [usuarioId], references: [id])
-  detalle     detalle_pedido[]
-  historial   historial_pedido[]
-  transaccion transaccion_pago[]
-  resena      resena[]
-  // direccion   direccion_envio?   @relation(fields: [direccion_envio_id], references: [id])
-
-  @@index([codigo_pedido])
-  @@index([usuarioId])
-  @@index([estado])
-  @@index([creado_en])
-}
-
-model detalle_pedido {
-  id                 Int      @id @default(autoincrement())
-  pedidoId           Int
-  varianteId         Int
-  cantidad           Int
-  precio_unitario    Decimal  @db.Decimal(10, 2)
-  descuento_aplicado Decimal? @default(0.00) @db.Decimal(10, 2)
-  subtotal           Decimal  @db.Decimal(10, 2)
-
-  pedido     pedido            @relation(fields: [pedidoId], references: [id])
-  variante   variante_producto @relation(fields: [varianteId], references: [id])
-  producto   producto?         @relation(fields: [productoId], references: [id])
-  productoId Int?
-
-  @@index([pedidoId])
-  @@index([varianteId])
-}
-
-model historial_pedido {
-  id        Int       @id @default(autoincrement())
-  pedidoId  Int
-  estado    String    @db.VarChar(50)
-  notas     String?   @db.Text
-  usuarioId Int?
-  creado_en DateTime? @default(now()) @db.Timestamp(0)
-
-  pedido  pedido   @relation(fields: [pedidoId], references: [id])
-  usuario usuario? @relation(fields: [usuarioId], references: [id])
-
-  @@index([pedidoId])
-}
-
-model transaccion_pago {
-  id          Int       @id @default(autoincrement())
-  pedidoId    Int
-  metodo_pago String    @db.VarChar(50)
-  codigo      String?   @db.VarChar(100)
-  monto       Decimal   @db.Decimal(10, 2)
-  estado      String    @db.VarChar(50)
-  respuesta   String?   @db.Text
-  fecha       DateTime? @default(now()) @db.Timestamp(0)
-
-  pedido pedido @relation(fields: [pedidoId], references: [id])
-
-  @@index([pedidoId])
-}
-
-// ==============================================
-// RESEÑAS
-// ==============================================
-
-model resena {
-  id           Int       @id @default(autoincrement())
-  productoId   Int
-  usuarioId    Int
-  pedidoId     Int?
-  calificacion Int       @default(5)
-  titulo       String?   @db.VarChar(150)
-  comentario   String?   @db.Text
-  ventajas     String?   @db.Text
-  desventajas  String?   @db.Text
-  aprobado     Boolean?  @default(false)
-  creado_en    DateTime? @default(now()) @db.Timestamp(0)
-
-  producto producto @relation(fields: [productoId], references: [id])
-  usuario  usuario  @relation(fields: [usuarioId], references: [id])
-  pedido   pedido?  @relation(fields: [pedidoId], references: [id])
-
-  @@index([productoId])
-  @@index([usuarioId])
-  @@index([aprobado])
-  @@index([calificacion])
 }

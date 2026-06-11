@@ -42,11 +42,11 @@ const HeaderDesktop = ({ className }: Props) => {
           </Link>
 
           <div className="flex h-[50px]">
-            <Link href="/Mujer" className="flex items-center px-6 text-sm font-medium border-r border-slate-300">
+            <Link href="/genero/Mujer" className="flex items-center px-6 text-sm font-medium border-r border-slate-300">
               MUJER
             </Link>
 
-            <Link href="/Hombre" className="flex items-center px-6 text-sm font-medium">
+            <Link href="/genero/Hombre" className="flex items-center px-6 text-sm font-medium">
               HOMBRE
             </Link>
           </div>

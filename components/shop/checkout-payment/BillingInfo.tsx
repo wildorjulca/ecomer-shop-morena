@@ -22,7 +22,7 @@ export default function BillingInfo() {
             {/* CONTENIDO */}
             <div className="mt-4">
                 <p className="text-gray-700 leading-relaxed">
-                    La boleta se enviará al siguiente correo{" "}
+                    La boleta se enviará al siguiente correo 
                     <span className="font-semibold text-gray-900">
                         {email}
                     </span>.

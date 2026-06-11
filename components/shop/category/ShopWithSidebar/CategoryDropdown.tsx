@@ -18,13 +18,13 @@ interface CategoryItemProps {
 const CategoryItem = ({ cat, gender }: CategoryItemProps) => {
     const pathName = usePathname()
 
-    const categoriaActual = pathName.split("/")[2].toLocaleLowerCase()
+    const categoriaActual = pathName.split("/")[3].toLocaleLowerCase()
 
     const isSelected = categoriaActual === cat.slug;
 
     return (
         <Link
-            href={`/${gender}/${cat.slug}`}
+            href={`/genero/${gender}/${cat.slug}`}
             className={`${isSelected ? "text-blue-500" : ""
                 } group flex items-center justify-between transition duration-200 hover:text-blue-500`}
         >

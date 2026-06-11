@@ -69,9 +69,45 @@ const ProductView = ({ product }: Props) => {
                     {product.nombre}
                 </h1>
 
-                <p className={`${titleFontSlug.className} text-lg mb-5 mt-2`}>
-                    S/.{product.precio_base_venta}
-                </p>
+                {/* {product.en_oferta && product.precio_descuento ? (
+                    <div className='w-full'>
+                        {product.precio_descuento}
+                        { product.en}
+                    </div>
+                ) : (
+                    <p className={`${titleFontSlug.className} text-lg mb-5 mt-2`}>
+                        S/.{product.precio_base_venta}
+                    </p>
+                )} */}
+
+                {product.en_oferta && product.precio_descuento ? (
+                    <div className="mt-2 mb-5">
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <span
+                                className={`${titleFontSlug.className} text-3xl font-semibold text-red-600`}
+                            >
+                                S/ {product.precio_descuento.toFixed(2)}
+                            </span>
+
+                            <span className="text-lg text-gray-400 line-through">
+                                S/ {product.precio_base_venta.toFixed(2)}
+                            </span>
+
+                            {product.porcentaje_descuento && (
+                                <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                                    -{product.porcentaje_descuento}%
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="mt-2 mb-5">
+                        <span className={`${titleFontSlug.className} text-3xl font-semibold`}>
+                            S/ {product.precio_base_venta.toFixed(2)}
+                        </span>
+                    </div>
+                )}
+
 
                 <ProductVariants
                     product={product}

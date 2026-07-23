@@ -1,41 +1,64 @@
 'use client';
 
-// import {
-//   AtSymbolIcon,
-//   KeyIcon,
-//   ExclamationCircleIcon,
-// } from '@heroicons/react/24/outline';
-// import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { ArrowRightIcon, KeyIcon, FileExclamationPoint, CircleAlert, AtSign } from 'lucide-react'
-// import { Button } from '@/app/ui/button';
-import { useActionState } from 'react';
-// import { authenticate } from '@/app/lib/actions';
-import { useSearchParams } from 'next/navigation';
+import { ArrowRightIcon, KeyIcon, CircleAlert, AtSign } from 'lucide-react'
+import { useActionState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
 import { authenticate } from '@/actions/shop/auth/login';
 import { GoogleIcon } from '@/components/icons/GoogleIcon';
 import clsx from 'clsx';
-import { signIn } from 'next-auth/react';
+import { useCartStore } from '@/src/store/cart/cart-store';
+import Link from 'next/link';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const router = useRouter()
+  const redirectTo = searchParams.get('redirectTo') || '/';
+
+  const { cart, } = useCartStore()
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined,
   );
-  const redirectTo = searchParams.get('redirectTo') || '/dashboard';
 
+  // `update` refresca el contexto cliente de next-auth (useSession).
+  // Es la pieza que faltaba: sin esto, aunque el login sea exitoso en
+  // el servidor, componentes cliente como CartSync o el header del
+  // sitio siguen viendo "unauthenticated" hasta un refresh manual.
+  const { update } = useSession()
+
+
+
+  useEffect(() => {
+    if (errorMessage !== "Success") return
+
+    const finalizarLogin = async () => {
+      // 1) Refresca la sesión en el cliente: a partir de acá,
+      //    useSession() en TODA la app (incluido CartSync) ya ve
+      //    status === "authenticated" sin necesidad de recargar.
+      await update()
+
+      // 2) Refresca los Server Components (por si alguno depende de
+      //    la sesión) y navega a destino.
+      // router.refresh()
+      // router.push(redirectTo)
+      window.location.replace(redirectTo)
+    }
+
+    finalizarLogin()
+  }, [errorMessage])
 
   const handleGoogleLogin = async () => {
     try {
-      const res = await signIn("google")
-      console.log(res)
-
+      // Google usa un flujo OAuth con redirect de página completa,
+      // así que al volver la página se recarga entera y useSession
+      // arranca ya autenticado. Eso está cubierto por la bandera
+      // `pendingGuestMerge` en CartSync, no requiere cambios acá.
+      await signIn("google")
     } catch (error) {
-      console.log(error)
+      console.error("[LoginForm] Google login:", error)
     }
   }
-
 
   return (
     <div className='space-y-3 flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8'>
@@ -58,8 +81,6 @@ export default function LoginForm() {
                   id="email"
                   type="email"
                   name="email"
-                // placeholder="introduce tu correo electrónico"
-                // required
                 />
                 <AtSign className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
@@ -77,15 +98,11 @@ export default function LoginForm() {
                   id="password"
                   type="password"
                   name="password"
-                // placeholder="Introduce tu contraseña"
-                // required
-                // minLength={6}
                 />
                 <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>
           </div>
-          <input type="hidden" name="redirectTo" value={redirectTo} />
           <button
             className={clsx(
               "mt-4 px-2.5 h-[44px] rounded-md text-white flex items-center justify-center w-full bg-blue-500 hover:bg-blue-600",
@@ -111,7 +128,7 @@ export default function LoginForm() {
             aria-live="polite"
             aria-atomic="true"
           >
-            {errorMessage && (
+            {errorMessage && errorMessage !== "Success" && (
               <>
                 <CircleAlert className="h-5 w-5 text-red-500" />
                 <p className="text-sm text-red-500">{errorMessage}</p>
@@ -119,15 +136,25 @@ export default function LoginForm() {
             )}
           </div>
         </div>
-      </form >
+      </form>
 
       <span className="relative z-10 block font-medium text-center mt-4.5">
         <span className="block absolute -z-10 left-0 top-1/2 h-px w-full bg-gray-200"></span>
         <span className="inline-block px-3 bg-white">Or</span>
       </span>
 
+      <p className="text-center text-sm mt-6 text-gray-600">
+        ¿No tienes una cuenta?
+        <Link
+          href="/auth/new-account"
+          className="text-gray-900 transition duration-200 hover:text-blue-600 pl-2"
+        >
+          ¡Regístrate ahora!
+        </Link>
+      </p>
+
       <button
-        type="submit"
+        type="button"
         onClick={handleGoogleLogin}
         className="
     w-full flex items-center justify-center gap-3
@@ -147,6 +174,6 @@ export default function LoginForm() {
         Iniciar sesión con Google
       </button>
 
-    </div >
+    </div>
   );
 }

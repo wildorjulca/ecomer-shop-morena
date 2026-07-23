@@ -10,6 +10,7 @@ const listFavoritePage = async () => {
     const session = await auth()
 
 
+
     if (!session?.user?.id) {
         redirect("/auth/login?redirectTo=/listFavorites");
     }

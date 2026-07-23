@@ -1,11 +1,14 @@
 'use client'
 
-import { useCartStore } from '@/src/store/cart/cart-store'
+import {  useCartStore } from '@/src/store/cart/cart-store'
 import CartItem from './CartItem'
 
+interface Props {
+    // initialCart: CartProduct[] | null
+    isAuthenticated: boolean
+}
 
-
-const CartList = () => {
+const CartList = ({  isAuthenticated }: Props) => {
 
     const { cart } = useCartStore()
 

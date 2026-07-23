@@ -1,9 +1,13 @@
 'use client'
 
+import { updateQuantityCart } from '@/actions/shop'
+import { removeProductCart } from '@/actions/shop/cart/removeProductCart'
 import { verificarStock } from '@/actions/shop/product/verificarStock'
 import { useLoader } from '@/components/provider/LoaderProvider'
-import { CartProduct, useCartStore } from '@/src/store/cart/cart-store'
+import { CartProduct } from '@/src/interface/cart'
+import { useCartStore } from '@/src/store/cart/cart-store'
 import { AlertCircle, MinusCircle, PlusCircleIcon, Trash2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -12,25 +16,79 @@ interface Props {
 }
 const CartItem = ({ item }: Props) => {
 
+    const { status } = useSession()
     const { removeProduct, updateQuantity } = useCartStore()
     const { loading, setLoading } = useLoader()
     const [newValueQuantity, setnewValueQuantity] = useState<number>()
     const [errorMessage, seterrorMessage] = useState<string | null>(null)
 
+    // const onChangeQuantity = async (varianteId: number, value: number) => {
+    //     if (value < 1) return // evitar cantidades negativas o 0
+
+    //     seterrorMessage(null)
+
+    //     setLoading(true)
+    //     const validateStock = await verificarStock(varianteId, value)
+    //     setLoading(false)
+
+    //     if (!validateStock.ok) {
+    //         seterrorMessage(validateStock.message ?? "")
+    //         return
+    //     }
+    //     updateQuantity(varianteId, value)
+    // }
+
     const onChangeQuantity = async (varianteId: number, value: number) => {
-        if (value < 1) return // evitar cantidades negativas o 0
+        if (value < 1) return;
 
-        seterrorMessage(null)
+        seterrorMessage(null);
+        setLoading(true);
 
-        setLoading(true)
-        const validateStock = await verificarStock(varianteId, value)
-        setLoading(false)
+        try {
+            // INVITADO
+            if (status === "unauthenticated") {
+                const stock = await verificarStock(varianteId, value);
 
-        if (!validateStock.ok) {
-            seterrorMessage(validateStock.message ?? "")
-            return
+                if (!stock.ok) {
+                    seterrorMessage(stock.message ?? "");
+                    return;
+                }
+
+                // Solo actualiza Zustand/localStorage
+                updateQuantity(varianteId, value);
+                return;
+            }
+
+            // AUTENTICADO
+            const result = await updateQuantityCart(varianteId, value);
+
+            if (!result.ok) {
+                seterrorMessage(result.message);
+                return;
+            }
+
+            // Refleja el cambio en el store local
+            updateQuantity(varianteId, value);
+        } catch (error) {
+            console.error(error);
+            seterrorMessage("Ocurrió un error al actualizar la cantidad.");
+        } finally {
+            setLoading(false);
         }
-        updateQuantity(varianteId, value)
+    };
+
+
+    const handleRemove = async (varianteId: number) => {
+
+        if (status === "authenticated") {
+            const result = await removeProductCart(varianteId)
+            if (!result.ok) {
+                seterrorMessage(result.message)
+                return
+            }
+        }
+        removeProduct(varianteId)
+
     }
     return (
         <div
@@ -72,7 +130,7 @@ const CartItem = ({ item }: Props) => {
                         {/* 🔴 ELIMINAR AQUÍ */}
                         <button
                             className="flex items-center gap-1 text-sm text-red-500 hover:underline mt-2"
-                            onClick={() => removeProduct(item.varianteId)}
+                            onClick={() => handleRemove(item.varianteId)}
                         >
                             <Trash2 size={16} />
                             Eliminar

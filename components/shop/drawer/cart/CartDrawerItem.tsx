@@ -1,6 +1,7 @@
 'use client'
 
-import { CartProduct, useCartStore } from '@/src/store/cart/cart-store'
+import { CartProduct } from '@/src/interface/cart'
+import {  useCartStore } from '@/src/store/cart/cart-store'
 import { MinusCircle, PlusCircle, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 

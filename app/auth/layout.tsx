@@ -1,6 +1,7 @@
 import React from 'react'
 import { Poppins } from 'next/font/google'
 import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -13,7 +14,11 @@ const AuthLayout = async ({ children }: Props) => {
 
     const session = await auth()
 
-    // if(session?.user)
+
+    if(session?.user){
+        redirect("/")
+    }
+    
     return (
         <div className={poppins.className}>
             {children}

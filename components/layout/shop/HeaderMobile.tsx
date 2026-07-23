@@ -5,12 +5,18 @@ import { useEffect, useState } from "react"
 import CartDrawer from "@/components/shop/drawer/cart/CartDrawer"
 import UnauthenticatedPopover from "./UnauthenticatedPopover"
 import Link from "next/link"
+import { useCartStore } from "@/src/store/cart/cart-store"
+import { useCartSummary } from "@/src/hooks"
+import { useSession } from "next-auth/react"
+import AuthenticatedPopover from "./AuthenticatedPopover"
 
 interface Props {
   className?: string
 }
 const HeaderMobile = ({ className }: Props) => {
 
+  const { status, data: session } = useSession()
+  const { itemsInCart } = useCartSummary()
   const [openCart, setOpenCart] = useState(false)
 
   const [scrolled, setScrolled] = useState(false)
@@ -72,9 +78,13 @@ const HeaderMobile = ({ className }: Props) => {
           {/* ICONOS */}
           <div className="flex items-center gap-3">
 
-            <UserCircleIcon className="w-6 h-6 text-gray-300 cursor-pointer" />
+            {/* <UserCircleIcon className="w-6 h-6 text-gray-300 cursor-pointer" /> */}
 
-            {/* <UnauthenticatedPopover /> */}
+            {status === "authenticated" ? (
+              <AuthenticatedPopover name={session.user.name ?? ""} />
+            ) : (
+              <UnauthenticatedPopover />
+            )}
 
             {/* <Heart className="w-5 h-5 text-gray-300 cursor-pointer" /> */}
 
@@ -84,10 +94,12 @@ const HeaderMobile = ({ className }: Props) => {
                 className="w-6 h-6 text-gray-300 cursor-pointer"
               />
 
-              {/* CONTADOR */}
-              {/* <span className="absolute -top-2 -right-2 bg-white text-black text-[10px] px-1 rounded-full">
-                2
-              </span> */}
+              {itemsInCart > 0 && (
+                <span className="absolute -top-1 -right-2 bg-white text-black text-[10px] px-1 rounded-full">
+                  {itemsInCart}
+                </span>
+              )}
+
             </div>
 
           </div>

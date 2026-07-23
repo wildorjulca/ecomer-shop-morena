@@ -4,6 +4,10 @@ import { Prisma } from "@/generated/prisma/client"
 import { prisma } from "@/libs"
 
 interface Props {
+
+    page?: number;
+    take?: number;
+
     gender: string
     brands?: string[],
     categories?: string[],
@@ -25,7 +29,11 @@ type Color = {
     tallas: Talla[]
 }
 
-export const getProducts = async ({ gender, brands, categories, sort }: Props) => {
+export const getProducts = async ({ page = 1, take = 12, gender, brands, categories, sort }: Props) => {
+
+
+    if (isNaN(Number(page))) page = 1;
+    if (page < 1) page = 1
 
     const where:
         Prisma.productoWhereInput = {
@@ -48,7 +56,6 @@ export const getProducts = async ({ gender, brands, categories, sort }: Props) =
             slug: {
                 in: brands.map((b) => b.trim())
             }
-
         }
 
     }
@@ -63,7 +70,6 @@ export const getProducts = async ({ gender, brands, categories, sort }: Props) =
             }
         }
     }
-
 
 
     let orderBy: Prisma.productoOrderByWithRelationInput = {
@@ -97,10 +103,11 @@ export const getProducts = async ({ gender, brands, categories, sort }: Props) =
             break
     }
 
-
     try {
 
         const products = await prisma.producto.findMany({
+            skip: (page - 1) * take,
+            take: take,
             where: where,
             select: {
                 id: true,
@@ -140,6 +147,10 @@ export const getProducts = async ({ gender, brands, categories, sort }: Props) =
             },
             orderBy: orderBy
         })
+
+        const totalCount = await prisma.producto.count({ where })
+        const totalPages = Math.ceil(totalCount / take)
+
 
         return {
             ok: true,
@@ -254,7 +265,12 @@ export const getProducts = async ({ gender, brands, categories, sort }: Props) =
                     // 🔥 tallas del color activo
                     // tallas
                 }
-            })
+            }),
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalCount,
+            }
         }
 
     } catch (error) {

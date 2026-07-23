@@ -10,6 +10,8 @@ import { AlertCircle } from 'lucide-react';
 import { verificarStock } from '@/actions/shop/product/verificarStock';
 import { useCartStore } from '@/src/store/cart/cart-store';
 import AddToCartMobile from './AddToCartMobile';
+import { useSession } from 'next-auth/react';
+import { addProductCart } from '@/actions/shop';
 
 interface Props {
     product: ProductSlug
@@ -21,7 +23,8 @@ interface Props {
 const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
 
 
-    const { addProduct, cart } = useCartStore()
+    const { status } = useSession()
+    const { addProduct, cart, markPendingGuestMerge } = useCartStore()
     const [quantity, setQuantity] = useState<number>(1)
 
     const router = useRouter()
@@ -34,7 +37,7 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
     const [selectedSize, setSelectedSize] = useState<VarianteSizes | null>(null)
 
     const [loading, setLoading] = useState(false)
-    const [loadingStock, setloadingStock] = useState(false)
+    const [loadingToCartStock, setloadingToCartStock] = useState(false)
 
     // 🔥 FETCH TALLAS
     useEffect(() => {
@@ -118,6 +121,62 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
     }
 
     // 🛒 AGREGAR AL CARRITO
+    // const handleAddToCart = async () => {
+    //     seterrorMessage(null)
+
+    //     if (!selectedSize) {
+    //         seterrorMessage("Debe seleccionar una talla")
+    //         return
+    //     }
+
+    //     setloadingStock(true)
+    //     const res = await verificarStock(selectedSize.variante_id, quantity)
+    //     setloadingStock(false)
+
+    //     if (!res.ok) {
+    //         seterrorMessage(res.message ?? "")
+    //         // toast.error(res.message, {
+    //         //     position: "bottom-center"
+    //         // })
+    //         return
+    //     }
+
+    //     const color = product.coloresDisponibles.find(
+    //         c => c.id === Number(colorIdSearch)
+    //     )
+
+    //     const itemProduct = {
+    //         varianteId: selectedSize.variante_id,
+    //         nombre: product.nombre,
+    //         precio: product.precio_base_venta,
+    //         porcentaje_descuento: product.porcentaje_descuento,
+    //         precio_descuento: product.precio_descuento,
+    //         en_oferta: product.en_oferta,
+    //         cantidad: quantity,
+    //         imagen: images[0],
+    //         color: color?.nombre ?? "",
+    //         talla: selectedSize.talla_valor
+    //     }
+
+    //     addProduct(itemProduct)
+    // }
+
+    // const handleAddToCart = async () => {
+    //     addProduct(product)
+
+    //     if (status !== "authenticated") return
+
+    //     const result = await addProductAction({
+    //         varianteId: product.varianteId,
+    //         cantidad: product.cantidad,
+    //     })
+
+    //     if (!result.ok) {
+    //         console.error("[AddToCartButton]", result.message)
+    //     }
+    // }
+
+    // 🛒 AGREGAR AL CARRITO — con loader GLOBAL (overlay de pantalla completa)
     const handleAddToCart = async () => {
         seterrorMessage(null)
 
@@ -126,37 +185,55 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
             return
         }
 
-        setloadingStock(true)
-        const res = await verificarStock(selectedSize.variante_id, quantity)
-        setloadingStock(false)
+        setloadingToCartStock(true)
 
-        if (!res.ok) {
-            seterrorMessage(res.message ?? "")
-            // toast.error(res.message, {
-            //     position: "bottom-center"
-            // })
-            return
+        try {
+            if (status === "authenticated") {
+                // Ya logueado: la BD es la fuente de verdad, se escribe directo.
+                const result = await addProductCart({
+                    varianteId: selectedSize.variante_id,
+                    cantidad: quantity,
+                })
+
+                if (!result.ok) {
+                    seterrorMessage(result.message)
+                    return
+                }
+            } else {
+                // Invitado: se valida stock antes de agregar al carrito local.
+                const stockResult = await verificarStock(selectedSize.variante_id, quantity)
+
+                if (!stockResult.ok) {
+                    seterrorMessage(stockResult.message ?? "Stock insuficiente")
+                    return
+                }
+
+                markPendingGuestMerge()
+            }
+
+            const color = product.coloresDisponibles.find(
+                (c) => c.id === Number(colorIdSearch)
+            )
+
+            const itemProduct = {
+                varianteId: selectedSize.variante_id,
+                nombre: product.nombre,
+                precio: product.precio_base_venta,
+                porcentaje_descuento: product.porcentaje_descuento,
+                precio_descuento: product.precio_descuento,
+                en_oferta: product.en_oferta,
+                cantidad: quantity,
+                imagen: images[0],
+                color: color?.nombre ?? "",
+                talla: selectedSize.talla_valor,
+            }
+
+            addProduct(itemProduct)
+        } finally {
+            setloadingToCartStock(false)
         }
-
-        const color = product.coloresDisponibles.find(
-            c => c.id === Number(colorIdSearch)
-        )
-
-        const itemProduct = {
-            varianteId: selectedSize.variante_id,
-            nombre: product.nombre,
-            precio: product.precio_base_venta,
-            porcentaje_descuento: product.porcentaje_descuento,
-            precio_descuento: product.precio_descuento,
-            en_oferta: product.en_oferta,
-            cantidad: quantity,
-            imagen: images[0],
-            color: color?.nombre ?? "",
-            talla: selectedSize.talla_valor
-        }
-
-        addProduct(itemProduct)
     }
+
 
     return (
         <div>
@@ -226,7 +303,7 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
 
             <AddToCart
                 className="hidden md:flex"
-                loadingStock={loadingStock}
+                loadingStock={loadingToCartStock}
                 handleAddToCart={handleAddToCart}
                 quantity={quantity}
                 onValueQuantityChanged={onValueQuantityChanged}
@@ -234,7 +311,7 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
 
             <AddToCartMobile
                 className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md p-3 md:hidden"
-                loadingStock={loadingStock}
+                loadingStock={loadingToCartStock}
                 handleAddToCart={handleAddToCart}
                 quantity={quantity}
                 onValueQuantityChanged={onValueQuantityChanged}

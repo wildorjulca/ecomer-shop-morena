@@ -14,7 +14,6 @@ interface Props {
 
 const ProductView = ({ product }: Props) => {
 
-    console.log(product)
 
     const [colorId, setColorId] = useState(product.color_default.id)
     const [images, setImages] = useState<string[]>(product.imagenes)

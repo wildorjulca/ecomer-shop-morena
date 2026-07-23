@@ -49,6 +49,7 @@ export const authConfig = {
             // 🔥 primer login
             if (user) {
                 token.id = user.id
+                token.role = user.role
             }
 
             // 🔥 fallback SI user ya no existe
@@ -78,6 +79,7 @@ export const authConfig = {
                 session.user.id = token.id as string
                 session.user.name = token.name as string
                 session.user.email = token.email as string
+                session.user.role = token.role as string
             }
 
             return session
@@ -121,6 +123,7 @@ export const authConfig = {
                     id: String(user.id),
                     email: email,
                     name: user.nombre,
+                    role: user.rol??"cliente",
                 }
 
             }

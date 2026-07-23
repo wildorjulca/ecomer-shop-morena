@@ -23,7 +23,6 @@ export default function ShopLayout({
     return (
         <LoaderProvider>
             <main className={`${poppins.className} w-full min-h-screen antialiased`}>
-
                 <HeaderDesktop className="hidden md:block" />
                 <HeaderMobile className="block md:hidden" />
 

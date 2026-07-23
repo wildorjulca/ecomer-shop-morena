@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDown, User, ShoppingBag, LogOut } from 'lucide-react'
 import { logout } from '@/actions/shop/auth/logout'
+import { useCartStore } from '@/src/store/cart/cart-store'
 
 export default function UserPopover({ name }: { name: string }) {
 
@@ -19,6 +20,13 @@ export default function UserPopover({ name }: { name: string }) {
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
+
+
+      const handleLogout = async () => {
+        useCartStore.getState().clearLocalCart() 
+        await logout()                          
+    }
+
 
     return (
         <>
@@ -74,7 +82,7 @@ export default function UserPopover({ name }: { name: string }) {
                         <div className="border-t my-2"></div>
 
                         <button
-                            onClick={logout}
+                            onClick={handleLogout}
                             className="w-full flex items-center justify-center gap-2 py-2 rounded-sm bg-brand text-white hover:bg-purple-800 transition hover:cursor-pointer">
                             <LogOut size={16} />
                             Cerrar sesión

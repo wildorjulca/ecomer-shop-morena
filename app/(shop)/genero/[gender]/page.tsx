@@ -3,6 +3,7 @@ import GenderHeaderFilters from '@/components/shop/gender/GendeHeaderFilters'
 import GenderCategoriesSlider from '@/components/shop/gender/GenderCategoriesSlider'
 import ProductGrid from '@/components/shop/products/ProductGrid'
 import { EmptyProducts } from '@/components/ui/EmptyProducts'
+import Pagination from '@/components/ui/Pagination'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import React from 'react'
@@ -15,6 +16,9 @@ interface Props {
         brands?: string;
         categoria?: string
         sort?: "recent" | "price-asc" | "price-desc" | "best-selling"
+        // Faltaba esto: sin leer `page` de la URL, siempre se pedía
+        // la página 1 sin importar en qué página estuviera el usuario.
+        page?: string
     }>
 }
 
@@ -27,23 +31,27 @@ const validGenders = [
 const GenderPage = async ({ params, searchParams }: Props) => {
 
     const { gender } = await params
-    const { brands, categoria, sort } = await searchParams
+    const { brands, categoria, sort, page } = await searchParams
 
-
-    const marcas =
-        brands?.split(",") || []
-
+    const marcas = brands?.split(",") || []
     const categories = categoria?.split(",") || []
 
-
-
-
+    // Si no hay `page` en la URL (primera visita) asumimos página 1.
+    // Si viene un valor inválido (texto, 0, negativo), también caemos
+    // a 1 en vez de mandarle un número raro a getProducts.
+    const currentPage = Number(page) > 0 ? Number(page) : 1
 
     if (!validGenders.includes(gender)) {
         notFound()
     }
 
-    const result = await getProducts({ gender, brands: marcas, categories, sort })
+    const result = await getProducts({
+        gender,
+        brands: marcas,
+        categories,
+        sort,
+        page: currentPage,
+    })
 
     if (!result.ok) {
         return (
@@ -68,9 +76,8 @@ const GenderPage = async ({ params, searchParams }: Props) => {
         )
     }
 
-
     const products = result.products
-
+    const pagination = result.pagination
 
     return (
         <section>
@@ -106,10 +113,25 @@ const GenderPage = async ({ params, searchParams }: Props) => {
             <div className='max-w-[1200px] mx-auto w-full mt-8'>
 
                 {products.length > 0 ? (
-                    <ProductGrid
-                        products={products || []}
-                        columns={4}
-                    />
+                    <>
+                        <ProductGrid
+                            products={products || []}
+                            columns={4}
+                        />
+
+                        {/*
+                          Ya NO se le pasa onPageChange: Pagination ahora
+                          navega sola leyendo/escribiendo la URL. Un Server
+                          Component como este no puede pasarle una función
+                          a un Client Component, así que esa prop nunca
+                          hubiera funcionado.
+                        */}
+                        <Pagination
+                            page={pagination?.currentPage ?? currentPage}
+                            totalPages={pagination?.totalPages ?? 0}
+                        />
+                    </>
+
                 ) : (
                     <EmptyProducts />
                 )}

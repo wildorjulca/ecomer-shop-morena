@@ -86,9 +86,13 @@ export const coloresColumns: ColumnDef<Color>[] = [
         header: "Acciones",
         cell: ({ row }) => {
 
+            const categoria = row.original
+
             return (
                 <div className="">
-                    <MenuActions />
+                    <MenuActions
+                        categoria={categoria}
+                    />
                 </div>
 
             );

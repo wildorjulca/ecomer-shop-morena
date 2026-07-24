@@ -31,7 +31,6 @@ export default function MarcasContainer() {
         setSelectedMarca(null)
         setIsOpen(false)
     }
-
     return (
         <>
             <MarcaHeader

@@ -108,7 +108,6 @@ export default function CategoriaTable() {
                 searh={search}
             />
 
-
             <DataTable
                 data={data?.categorias || []}
                 columns={categoriasColumns}

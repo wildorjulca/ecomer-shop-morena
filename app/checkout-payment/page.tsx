@@ -8,8 +8,6 @@ import { CheckoutFormInputs } from '@/src/interface'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-
-
 const CheckoutPaymentPage = () => {
 
     // Este lo que ase es crear un contexto para el formulario de checkout, asi no tengo que pasar props a los componentes hijos, 

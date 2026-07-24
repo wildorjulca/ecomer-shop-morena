@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-
 import MarcaHeader from './MarcaHeader'
 import MarcaTable from './MarcaTable'
 import MarcaModal from './MarcaModal'
@@ -31,6 +30,7 @@ export default function MarcasContainer() {
         setSelectedMarca(null)
         setIsOpen(false)
     }
+
     return (
         <>
             <MarcaHeader

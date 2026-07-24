@@ -20,12 +20,21 @@ import { PrismaClient } from "../generated/prisma/client";
 //     port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 3306,
 // });
 
+// const adapter = new PrismaMariaDb({
+//     host: process.env.DATABASE_HOST!,
+//     user: process.env.DATABASE_USER!,
+//     password: process.env.DATABASE_PASSWORD!,
+//     database: process.env.DATABASE_NAME!,
+//     port: Number(process.env.DATABASE_PORT ?? 3306),
+//     connectionLimit: 5,
+// });
+
 const adapter = new PrismaMariaDb({
-    host: process.env.DATABASE_HOST!,
-    user: process.env.DATABASE_USER!,
-    password: process.env.DATABASE_PASSWORD!,
-    database: process.env.DATABASE_NAME!,
-    port: Number(process.env.DATABASE_PORT ?? 3306),
+    host: "sql.freedb.tech",
+    user: "u_V00YDH",
+    password: "qEA8RfEwebWC",
+    database:"freedb_5Eo9qqux",
+    port: 3306,
     connectionLimit: 5,
 });
 

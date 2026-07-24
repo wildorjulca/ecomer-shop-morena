@@ -108,7 +108,6 @@ function DataTable<TData, TValue>({
             <Pagination
                 page={page}
                 totalPages={totalPages}
-            // onPageChange={onPageChange}
             />
         </div>
     )

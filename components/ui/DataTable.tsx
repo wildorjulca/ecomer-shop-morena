@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table'
 
 import Pagination from './Pagination'
+import { Suspense } from 'react'
 
 interface DataTableProps<TData, TValue> {
     data: TData[]
@@ -105,10 +106,13 @@ function DataTable<TData, TValue>({
                 </table>
             </div>
 
-            <Pagination
-                page={page}
-                totalPages={totalPages}
-            />
+            <Suspense fallback={<div>Cargando...</div>}>
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                />
+            </Suspense>
+
         </div>
     )
 }

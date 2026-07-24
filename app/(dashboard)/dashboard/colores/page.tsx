@@ -12,7 +12,6 @@ const ColoresPage = () => {
             <ProductosTable /> */}
             {/* <DataTable
                  data={} */}
-
         </div>
     )
 }

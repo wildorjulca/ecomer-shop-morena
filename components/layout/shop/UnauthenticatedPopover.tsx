@@ -40,12 +40,12 @@ export default function UnauthenticatedPopover() {
                     onClick={() => setOpen(!open)}
                     className="flex items-center   rounded-md text-white transition"
                 >
-                    <div className='flex flex-col  md:text-sm'>
-                        !Hola!
-                        <span>
+                    {/* <div className='flex flex-col  md:text-sm'> */}
+                        {/* !Hola! */}
+                        <span className=''>
                             Inicia sesión
                         </span>
-                    </div>
+                    {/* </div> */}
 
                     <ChevronDown
                         size={16}

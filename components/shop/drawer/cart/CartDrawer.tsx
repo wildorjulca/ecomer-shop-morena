@@ -54,7 +54,7 @@ const CartDrawer = ({ isOpen, onClose }: Props) => {
                     fixed z-50 h-screen  bg-white text-black flex flex-col shadow-2xl transition-all duration-300 ease-in-out
                     
                     /* 📱 MOBILE */
-                    top-0 right-0 bottom-0 w-full h-full rounded-none
+                    top-0 right-0 bottom-0 w-full h-screen rounded-none
                     
                     /* 🖥️ DESKTOP */
                     md:top-16 md:right-2 md:w-[360px] md:h-[80vh] md:rounded-sm

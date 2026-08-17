@@ -449,6 +449,31 @@ export const intialData: SeedData = {
 
             ],
         },
+        {
+            nombre: "Polo tenis aclimado pegado soft",
+            descripcion: "Polo elegante con un ajuste clásico y el emblemático diseño de las 3 Tiras.",
+            precio_base_venta: 40,
+            generoNombre: "Hombre",
+            categoriaNombre: "Ropa",
+            subcategoriaNombre: "Polos",
+            marcaNombre: "adidas",
+            tipoTallaNombre: "Prendas superiores",
+            imagenes: [
+                { colorNombre: "Azul", url: "234.png" },
+                { colorNombre: "Azul", url: "235.png" },
+                // { colorNombre: "Rojo", url: "198.png" },
+                // { colorNombre: "Rojo", url: "199.png" },
+
+
+            ],
+            combinaciones: [
+                { colorNombre: "Azul", tallaValor: "S", cantidad_stock: 6 },
+                { colorNombre: "Azul", tallaValor: "M", cantidad_stock: 6 },
+                { colorNombre: "Azul", tallaValor: "L", cantidad_stock: 6 },
+                { colorNombre: "Azul", tallaValor: "XL", cantidad_stock: 6 },
+
+            ],
+        },
         // =========================================
         //  *** CATEGORÍA: Calzado Deportivo ***  // 
         // ========================================
@@ -1853,6 +1878,37 @@ export const intialData: SeedData = {
 
             ],
         },
+        {
+            nombre: "Vestido Maxi High Neck Rib Striped",
+            descripcion: "Vestido largo de mujer con diseño elegante y silueta fluida que realza la figura. Confeccionado en tela ligera y de caída suave, ideal para ocasiones especiales o looks sofisticados. Su estilo versátil permite combinarlo con tacones o sandalias para un acabado impecable.",
+            precio_base_venta: 60,
+            generoNombre: "Mujer",
+            categoriaNombre: "Ropa",
+            subcategoriaNombre: "Vestidos",
+            marcaNombre: "",
+            tipoTallaNombre: "Prendas completas",
+            imagenes: [
+                { colorNombre: "Azul", url: "248.png" },
+                { colorNombre: "Azul", url: "249.png" },
+
+                { colorNombre: "Rosado", url: "250.png" },
+                { colorNombre: "Rosado", url: "251.png" },
+            ],
+            combinaciones: [
+                { colorNombre: "Azul", tallaValor: "S", cantidad_stock: 6 },
+                { colorNombre: "Azul", tallaValor: "M", cantidad_stock: 6 },
+                { colorNombre: "Azul", tallaValor: "L", cantidad_stock: 6 },
+                { colorNombre: "Azul", tallaValor: "XS", cantidad_stock: 6 },
+
+                { colorNombre: "Rosado", tallaValor: "S", cantidad_stock: 6 },
+                { colorNombre: "Rosado", tallaValor: "M", cantidad_stock: 6 },
+                { colorNombre: "Rosado", tallaValor: "L", cantidad_stock: 6 },
+                { colorNombre: "Rosado", tallaValor: "XS", cantidad_stock: 6 },
+
+            ],
+        },
+
+
         // CASACAS
         {
             nombre: "Casaca Trucker High Standards 90's Boyfriend Denim - Deslavado Medio",

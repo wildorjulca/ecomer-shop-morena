@@ -9,6 +9,8 @@ import { getProductImagesByColor } from "@/actions/shop/images/getProductImagesB
 import { toast } from "sonner"
 import clsx from "clsx"
 import ProductPrice from "../product/product-price"
+import { getImageSrc } from "@/src/utils/getImageSrc"
+import { CldImage } from "next-cloudinary"
 
 interface Props {
   product: Product
@@ -87,12 +89,45 @@ const ProductItem = ({ product }: Props) => {
         <Link href={`/product/${product.slug}`}>
           <div className="relative w-full h-[250px] md:h-[500px]">
 
-            <Image
+            {/* <Image
               alt={product.nombre}
-              src={`/images/products/${selectImage}`}
+              src={`${getImageSrc(selectImage)}`}
               fill
               className={`object-contain transition duration-300 group-hover:scale-105`}
-            />
+            /> */}
+            {
+
+              selectImage.includes("res.cloudinary.com") ? (
+                <CldImage
+                  alt={product.nombre}
+                  src={getImageSrc(selectImage)}
+                  fill
+                  removeBackground={true}
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-contain transition duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <Image
+                  alt={product.nombre}
+                  src={`${getImageSrc(selectImage)}`}
+                  fill
+                  className={`object-contain transition duration-300 group-hover:scale-105`}
+                />
+
+              )
+            }
+
+
+
+
+            {/* <Image
+              alt={product.nombre}
+              src={getImageSrc(selectImage, {
+                removeBackground: true,
+              })}
+              fill
+              className="object-contain transition duration-300 group-hover:scale-105"
+            /> */}
             {/* ⏳ LOADING OVERLAY */}
             {loading && (
               <div className="absolute inset-0 bg-black/5 flex items-center justify-center">

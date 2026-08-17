@@ -21,7 +21,7 @@ const filters = [
         label: "Color",
         view: "colors"
     },
-    
+
 ]
 
 export type FilterView =
@@ -55,30 +55,10 @@ export default function GenderHeaderFilters() {
         shadow-[0_8px_20px_-15px_rgba(0,0,0,0.25)]
       "
             >
-
-                <div
-                    className="
-           max-w-[1200px]
-        mx-auto
-        h-[72px]
-        flex
-        items-center
-        justify-between
-        gap-4
-        "
-                >
-
+                <div className="max-w-[1200px] mx-auto h-[72px] flex items-center justify-between gap-4">
                     {/* LEFT */}
-                    <div
-                        className="
-            flex
-            items-center
-            gap-4
-            overflow-x-auto
-            scrollbar-hide
-          "
+                    <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide"
                     >
-
                         {/* all filters */}
                         <button
                             onClick={() => {
@@ -178,7 +158,6 @@ export default function GenderHeaderFilters() {
                 relative
               "
                             >
-
                                 <div
                                     className="
                   absolute

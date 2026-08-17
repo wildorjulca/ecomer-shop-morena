@@ -44,7 +44,7 @@ const CategoryFilter = ({ items, loading, setView, setSelectedCategories, select
                 <ChevronLeft size={20} />
 
                 <span className="font-medium text-[18px]">
-                    Marcas
+                    Categorias
                 </span>
 
             </button>

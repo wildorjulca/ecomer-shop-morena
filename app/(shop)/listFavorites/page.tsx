@@ -34,8 +34,8 @@ const listFavoritePage = async () => {
         <div className='max-w-[1200px] mx-auto w-full bg-white mt-4'>
             {products.length > 0 ? (
                 <>
-                    <h3 className='text-black font-sans truncate text-2xl'>Lista de favoritos</h3>
-                    <ProductGrid products={result.products} columns={4} />
+                    <h3 className='text-black font-sans truncate text-2xl mb-4'>Lista de favoritos</h3>
+                    <ProductGrid products={result.products} columns={3} />
                 </>
             ) : (
                 <EmptyProducts />

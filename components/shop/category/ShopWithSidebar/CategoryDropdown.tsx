@@ -87,7 +87,7 @@ export const CategoryDropdown = ({
                     }`}
             >
                 <p className="text-gray-900 font-normal">
-                    Subcategorías
+                    Categorías
                 </p>
 
                 <button

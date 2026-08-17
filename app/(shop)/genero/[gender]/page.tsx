@@ -23,10 +23,10 @@ interface Props {
 }
 
 const validGenders = [
-    'Hombre',
-    'Mujer',
-    'niño',
-    'niña'
+    'hombre',
+    'mujer',
+    'ninos',
+    'ninas'
 ]
 const GenderPage = async ({ params, searchParams }: Props) => {
 
@@ -40,6 +40,7 @@ const GenderPage = async ({ params, searchParams }: Props) => {
     // Si viene un valor inválido (texto, 0, negativo), también caemos
     // a 1 en vez de mandarle un número raro a getProducts.
     const currentPage = Number(page) > 0 ? Number(page) : 1
+
 
     if (!validGenders.includes(gender)) {
         notFound()
@@ -116,7 +117,7 @@ const GenderPage = async ({ params, searchParams }: Props) => {
                     <>
                         <ProductGrid
                             products={products || []}
-                            columns={4}
+                            columns={3}
                         />
 
                         {/*

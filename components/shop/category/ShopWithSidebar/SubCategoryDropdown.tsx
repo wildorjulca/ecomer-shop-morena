@@ -1,4 +1,5 @@
 import { Categories, Subcategorias } from "@/src/interface/categorySidebar";
+import { useSidebarAction } from "@/src/store/sidebar/sidebar-movile-action";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -13,8 +14,10 @@ interface CategoryItemProps {
 
 const CategoryItem = ({ sub }: CategoryItemProps) => {
 
+    const { openSidebar, toogleSidebar } = useSidebarAction()
     const router = useRouter()
     const searchParams = useSearchParams()
+
     const params = useParams();
 
 
@@ -30,7 +33,13 @@ const CategoryItem = ({ sub }: CategoryItemProps) => {
     const handleNavigate = (valor: string) => {
         const params = new URLSearchParams(searchParams.toString());
 
-        console.log(params.get("subCategoria"))
+        // console.log(params.get("subCategoria"))
+        // console.log(params.get("page"))
+
+        params.delete("page")
+        // console.log(params.get("page"))
+
+
 
         if (isSelected) {
             params.delete("subCategoria")
@@ -40,6 +49,7 @@ const CategoryItem = ({ sub }: CategoryItemProps) => {
         }
 
         router.push(`?${params.toString()}`); // 👈 esto dispara el loading.tsx
+        toogleSidebar(false)
 
     }
     return (

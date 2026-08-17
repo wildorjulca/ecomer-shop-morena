@@ -44,12 +44,10 @@ const page = async ({ params }: Props) => {
 
 
             <div className='mt-10'>
-                <h1 className={`font-sans text-2xl mb-4 font-medium uppercase`}>
-                    Productos Similares
-                </h1>
+                <h3 className="text-3xl mb-4">Productos similares</h3>
                 <ProductGrid
                     products={result.products}
-                    columns={4}
+                    columns={3}
                 />
             </div>
 

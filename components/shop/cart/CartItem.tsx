@@ -6,8 +6,10 @@ import { verificarStock } from '@/actions/shop/product/verificarStock'
 import { useLoader } from '@/components/provider/LoaderProvider'
 import { CartProduct } from '@/src/interface/cart'
 import { useCartStore } from '@/src/store/cart/cart-store'
+import { getImageSrc } from '@/src/utils/getImageSrc'
 import { AlertCircle, MinusCircle, PlusCircleIcon, Trash2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { CldImage } from 'next-cloudinary'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -98,12 +100,28 @@ const CartItem = ({ item }: Props) => {
 
             {/* Imagen */}
             <div className="relative w-[100px] h-[100px] bg-black/10 flex justify-center items-center rounded">
-                <Image
-                    alt={item.nombre}
-                    src={`/images/products/${item.imagen}`}
-                    fill
-                    className="object-contain"
-                />
+
+                {
+
+                    item.imagen.includes("res.cloudinary.com") ? (
+                        <CldImage
+                            alt={item.nombre}
+                            src={getImageSrc(item.imagen)}
+                            fill
+                            removeBackground={true}
+                            className="object-contain p-1"
+                        />
+                    ) : (
+                        <Image
+                            alt={item.nombre}
+                            src={`${getImageSrc(item.imagen)}`}
+                            fill
+                            className="object-contain p-1"
+
+                        />
+
+                    )
+                }
             </div>
 
             {/* Info + controls */}

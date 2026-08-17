@@ -3,6 +3,7 @@
 import { prisma } from "@/libs"
 
 export const getCategorias = async (generoSlug: string) => {
+    
     const categories = await prisma.categoria.findMany({
         where: {
             subcategoria: {

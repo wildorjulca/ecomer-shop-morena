@@ -12,7 +12,7 @@ export const verificarStock = async (
     quantity: number
 ): Promise<VerifyStockResponse> => {
 
-    await sleep(1)
+    // await sleep(1)
 
     // 🔹 Validación básica
     if (!varianteId || quantity <= 0) {

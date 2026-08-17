@@ -47,7 +47,8 @@ const CategoryLayout = async ({ children, params }: Props) => {
 
                 {/* <div className={`w-64 shrink-0 flex md:hidden`}> */}
                 <CategorySidebarMovile
-                    className='flex md:hidden'
+                    // className='flex md:hidden'
+                    categories={categorias}
                     subcategorias={subcategorias}
                     marcas={marcas}
                     gender={gender}

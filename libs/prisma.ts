@@ -11,6 +11,9 @@ import { PrismaClient } from "../generated/prisma/client";
 //     connectionLimit: 5
 // });
 
+
+
+
 // const adapter = new PrismaMariaDb({
 //     host: process.env.DATABASE_HOST,
 //     user: process.env.DATABASE_USER,
@@ -29,13 +32,31 @@ import { PrismaClient } from "../generated/prisma/client";
 //     connectionLimit: 5,
 // });
 
+// DATABASE_HOST=altaria.proxy.rlwy.net
+// DATABASE_PORT=43249
+// DATABASE_USER=root
+// DATABASE_PASSWORD=LfnPygxpSgIOGPhxFfPlPRfZGZspkrSA
+// DATABASE_NAME=railway
+
+// const adapter = new PrismaMariaDb({
+//     host: "altaria.proxy.rlwy.net",
+//     user: "root",
+//     password: "LfnPygxpSgIOGPhxFfPlPRfZGZspkrSA",
+//     database: "railway",
+//     port: 43249,
+//     // connectionLimit: 5,
+// });
+
 const adapter = new PrismaMariaDb({
-    host: "sql.freedb.tech",
-    user: "u_V00YDH",
-    password: "qEA8RfEwebWC",
-    database:"freedb_5Eo9qqux",
-    port: 3306,
-    connectionLimit: 5,
+  host: process.env.DATABASE_HOST!,
+  user: process.env.DATABASE_USER!,
+  password: process.env.DATABASE_PASSWORD!,
+  database: process.env.DATABASE_NAME!,
+  port: Number(process.env.DATABASE_PORT ?? 3306),
+
+  connectionLimit: 5,
+  acquireTimeout: 10000,
+  connectTimeout: 10000,
 });
 
 const prisma = new PrismaClient({ adapter });

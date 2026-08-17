@@ -1,4 +1,5 @@
 import { Marca, Subcategorias } from "@/src/interface/categorySidebar";
+import { useSidebarAction } from "@/src/store/sidebar/sidebar-movile-action";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +14,7 @@ interface ItemProps {
 
 const MarcaItem = ({ item }: ItemProps) => {
 
+    const { openSidebar, toogleSidebar } = useSidebarAction()
     const params = useParams();
     const isActive = item.slug == params.category
 

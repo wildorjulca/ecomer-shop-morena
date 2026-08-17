@@ -16,6 +16,10 @@ export { getProvincias } from './provincia/getProvincias'
 
 export { getAllDashboardStats } from './home/dashboard.stats'
 export { getRecentOrders, getDashboardSummary } from './home/dashboard.actions'
+export { getTipoTallas } from './productos/new/getTipoTallas'
+export { getTallas } from './productos/new/getTallas'
+export { getSubCategorias} from './productos/new/getSubCategorias'
+export { saveProduct } from './productos/new/saveProduct'
 
 
 

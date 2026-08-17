@@ -2,7 +2,7 @@
 
 import { prisma } from "@/libs"
 
-export const getCategories = async () => {
+export const getCategories = async (gender: string) => {
 
   const categories = await prisma.categoria.findMany({
     select: {
@@ -12,12 +12,16 @@ export const getCategories = async () => {
         select: {
           _count: {
             select: {
-              producto: true
+              producto: {
+                where: {
+                  genero: { slug: gender.toLowerCase()}
+                },
+              }
             }
           }
         }
       }
-    }
+    },
   })
 
   return categories.map(category => ({

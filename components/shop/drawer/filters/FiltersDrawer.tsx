@@ -124,7 +124,7 @@ const FiltersDrawer = ({
                         break
                     case "category":
 
-                        data = await getCategories()
+                        data = await getCategories(gender)
 
                         break
 
@@ -183,6 +183,10 @@ const FiltersDrawer = ({
     }
 
     const handleFilterClear = () => {
+
+        setSelectedBrands([])
+        setSelectedColors([])
+        setselectedCategories([])
         router.push(`${pathname}`)
         onClose()
     }
@@ -253,6 +257,21 @@ const FiltersDrawer = ({
                         view === "main" && (
                             <FiltersMain
                                 setView={setView}
+                                onClose={onClose}
+                            />
+                        )
+                    }
+
+                     {
+                        view === "category" && (
+                            <CategoryFilter
+                                items={
+                                    filtersData.category || []
+                                }
+                                selectedCategories={selectedCategories}
+                                setSelectedCategories={setselectedCategories}
+                                loading={loading}
+                                setView={setView}
                             />
                         )
                     }
@@ -268,19 +287,6 @@ const FiltersDrawer = ({
 
                                 setSelectedBrands={setSelectedBrands}
                                 selectedBrands={selectedBrands}
-                            />
-                        )
-                    }
-                    {
-                        view === "category" && (
-                            <CategoryFilter
-                                items={
-                                    filtersData.category || []
-                                }
-                                selectedCategories={selectedCategories}
-                                setSelectedCategories={setselectedCategories}
-                                loading={loading}
-                                setView={setView}
                             />
                         )
                     }
@@ -340,7 +346,7 @@ const FiltersDrawer = ({
                             h-[52px]
                             border
                             border-black
-                            rounded-md
+                            rounded-sm
                             font-medium
                             cursor-pointer
                             text-[15px]
@@ -360,10 +366,11 @@ const FiltersDrawer = ({
                             bg-[#6A148E]
                             text-white
                             cursor-pointer
-                            rounded-md
+                            rounded-sm
+                            border-none
                             font-medium
                             text-[15px]
-                            hover:opacity-90
+                            hover:bg-[#600e83]
                             transition
                         "
                     >

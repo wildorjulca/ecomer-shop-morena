@@ -38,9 +38,9 @@ export default function UnauthenticatedPopover() {
                 {/* BOTÓN */}
                 <div
                     onClick={() => setOpen(!open)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md text-white transition"
+                    className="flex items-center   rounded-md text-white transition"
                 >
-                    <div className='flex flex-col font-semibold md:font-normal'>
+                    <div className='flex flex-col  md:text-sm'>
                         !Hola!
                         <span>
                             Inicia sesión

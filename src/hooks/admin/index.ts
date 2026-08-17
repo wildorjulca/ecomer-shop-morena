@@ -13,4 +13,7 @@ export { useCreateCategoria } from './categorias/useCreateCategoria'
 export { useDepartamentos } from './departamentos/useDepartamentos'
 export { useProvincias } from './provincias/useProvincias'
 
+export { useVariants } from './productos/useVariants'
+export { useTallas }  from './productos/useTallas'
+
 

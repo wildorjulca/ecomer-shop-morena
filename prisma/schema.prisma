@@ -114,35 +114,38 @@ model marca {
 }
 
 model producto {
-  id                   Int                 @id @default(autoincrement())
-  nombre               String              @db.VarChar(100)
-  slug                 String              @unique @db.VarChar(100)
-  referencia           String?             @db.VarChar(50)
-  descripcion          String?             @db.Text
-  precio_base_venta    Decimal             @db.Decimal(10, 2)
-  precio_descuento     Decimal?            @db.Decimal(10, 2)
-  porcentaje_descuento Int?                @default(0)
-  en_oferta            Boolean?            @default(false)
-  destacado            Boolean?            @default(false)
-  nuevo                Boolean?            @default(true)
-  rating_promedio      Float?              @default(0)
-  total_vendidos       Int?                @default(0)
-  activo               Boolean?            @default(true)
-  creado_en            DateTime?           @default(now()) @db.Timestamp(0)
-  actualizado_en       DateTime?           @default(now()) @db.Timestamp(0)
-  subcategoriaId       Int
-  generoId             Int
-  marcaId              Int?
-  atributo             atributo_producto[]
-  carrito              carrito[]
-  detalle              detalle_pedido[]
-  genero               genero              @relation(fields: [generoId], references: [id])
-  marca                marca?              @relation(fields: [marcaId], references: [id])
-  subcategoria         subcategoria        @relation(fields: [subcategoriaId], references: [id])
-  imagen               producto_imagen[]
-  resena               resena[]
-  variante             variante_producto[]
-  wishlists            wishlist[]
+  id          Int     @id @default(autoincrement())
+  nombre      String  @db.VarChar(100)
+  slug        String  @unique @db.VarChar(100)
+  referencia  String? @db.VarChar(50)
+  descripcion String? @db.Text
+
+  precio_compra        Decimal?  @db.Decimal(10, 2)
+  precio_base_venta    Decimal  @db.Decimal(10, 2)
+  precio_descuento     Decimal? @db.Decimal(10, 2)
+  porcentaje_descuento Int?     @default(0)
+  en_oferta            Boolean? @default(false)
+
+  destacado       Boolean?            @default(false)
+  nuevo           Boolean?            @default(true)
+  rating_promedio Float?              @default(0)
+  total_vendidos  Int?                @default(0)
+  activo          Boolean?            @default(true)
+  creado_en       DateTime?           @default(now()) @db.Timestamp(0)
+  actualizado_en  DateTime?           @default(now()) @db.Timestamp(0)
+  subcategoriaId  Int
+  generoId        Int
+  marcaId         Int?
+  atributo        atributo_producto[]
+  carrito         carrito[]
+  detalle         detalle_pedido[]
+  genero          genero              @relation(fields: [generoId], references: [id])
+  marca           marca?              @relation(fields: [marcaId], references: [id])
+  subcategoria    subcategoria        @relation(fields: [subcategoriaId], references: [id])
+  imagen          producto_imagen[]
+  resena          resena[]
+  variante        variante_producto[]
+  wishlists       wishlist[]
 
   @@index([slug])
   @@index([activo])
@@ -201,7 +204,7 @@ model variante_producto {
   sku               String?           @unique @db.VarChar(255)
   codigo_barras     String?           @db.VarChar(50)
   precio_extra      Decimal?          @default(0.00) @db.Decimal(8, 2)
-  costo_compra      Decimal?          @default(0.00) @db.Decimal(10, 2)
+  // costo_compra      Decimal?          @default(0.00) @db.Decimal(10, 2)
   cantidad_stock    Int?              @default(0)
   stock_minimo      Int?              @default(5)
   peso              Decimal?          @db.Decimal(10, 2)
@@ -248,6 +251,7 @@ model producto_imagen {
   productoId   Int
   colorId      Int
   url_imagen   String    @db.VarChar(255)
+  publicId     String?   @db.VarChar(255)
   orden        Int?      @default(0)
   es_principal Boolean?  @default(false)
   creado_en    DateTime? @default(now()) @db.Timestamp(0)

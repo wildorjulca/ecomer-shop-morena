@@ -1,67 +1,64 @@
 'use client'
 
-import { Marca, Subcategorias, Talla } from '@/src/interface/categorySidebar';
+import { Categories, Marca, Subcategorias, Talla } from '@/src/interface/categorySidebar'
 import { useSidebarAction } from '@/src/store/sidebar/sidebar-movile-action'
-import React from 'react'
-import { SubCategoryDropdown } from './ShopWithSidebar/SubCategoryDropdown';
-import { MarcaDropdown } from './ShopWithSidebar/MarcaDropdown';
-import SizeDropdown from './ShopWithSidebar/SizeDropdown';
-
+import { SubCategoryDropdown } from './ShopWithSidebar/SubCategoryDropdown'
+import { MarcaDropdown } from './ShopWithSidebar/MarcaDropdown'
+import SizeDropdown from './ShopWithSidebar/SizeDropdown'
+import { X } from 'lucide-react'
 interface Props {
-    className: string;
     gender: string
     currentCategory: string
+    categories: Categories[]
     subcategorias: Subcategorias[]
     marcas: Marca[]
     tallas: Talla[]
 }
 
 const CategorySidebarMovile = ({
-    className,
-    currentCategory,
     subcategorias,
     marcas,
-    tallas
-
+    categories,
+    tallas,
 }: Props) => {
-
     const { openSidebar, toogleSidebar } = useSidebarAction()
 
     return (
-        <>
+        <div className="md:hidden">
+
+
             {/* OVERLAY */}
             {openSidebar && (
                 <div
                     onClick={() => toogleSidebar(false)}
-                    className="fixed inset-0 bg-black/40 z-50 xl:hidden"
+                    className="fixed inset-0 z-40 bg-black/40"
                 />
             )}
 
             {/* SIDEBAR */}
-            <div className={`${className}`}>
-                <div className={`w-64 fixed top-0 left-0 h-screen bg-white z-50 
-                                overflow-y-auto transition-transform duration-300
-                                ${openSidebar ? 'translate-x-0' : "-translate-x-full"}
-                                `}>
+            <aside
+                className={`
+          fixed top-0 left-0 z-50 h-screen w-72 bg-white
+          overflow-y-auto shadow-xl
+          transition-transform duration-300
+          ${openSidebar ? 'translate-x-0' : '-translate-x-full'}
+        `}
+            >
+                <div className="flex items-center justify-between border-b p-4">
+                    <h2 className="text-lg font-semibold">Filtros</h2>
 
-                    <div className="p-4 flex flex-col gap-4">
-
-                        <h2 className="font-semibold text-lg">
-                            Filtros
-                        </h2>
-
-                        {/* EJEMPLO CONTENIDO */}
-                        <div className="flex flex-col gap-2">
-                            <SubCategoryDropdown subcategory={subcategorias} />
-                            <MarcaDropdown marcas={marcas} />
-                            <SizeDropdown tallas={tallas} />
-                        </div>
-
-                    </div>
-
+                    <button onClick={() => toogleSidebar(false)}>
+                        <X size={20} />
+                    </button>
                 </div>
-            </div>
-        </>
+
+                <div className="flex flex-col gap-4 p-4">
+                    <SubCategoryDropdown subcategory={subcategorias} />
+                    <MarcaDropdown marcas={marcas} />
+                    <SizeDropdown tallas={tallas} />
+                </div>
+            </aside>
+        </div>
     )
 }
 

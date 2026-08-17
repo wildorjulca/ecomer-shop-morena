@@ -1,12 +1,15 @@
 'use server'
 
-import { prisma } from "@/libs"
+import { prisma, sleep } from "@/libs"
 import { productoWhereInput } from "@/generated/prisma/models"
 import { auth } from "@/auth"
 
 interface Props {
     genderSlug: string
     categorySlug: string
+
+    take?: number;
+    page?: number;
     subcategoriaSlug?: string
 }
 
@@ -28,11 +31,21 @@ type Color = {
 export const getProductCategory = async ({
     genderSlug,
     categorySlug,
+
+    take = 9,
+    page = 1,
     subcategoriaSlug
 }: Props) => {
 
+
+    if (isNaN(Number(page))) page = 1;
+    if (page < 1) page = 1
+
+
     const session = await auth()
     const userId = Number(session?.user?.id)
+
+    await sleep(2)
 
     try {
 
@@ -53,6 +66,8 @@ export const getProductCategory = async ({
         }
 
         const products = await prisma.producto.findMany({
+            skip: (page - 1) * take,
+            take: take,
             where,
             select: {
                 id: true,
@@ -95,6 +110,10 @@ export const getProductCategory = async ({
                 id: "desc"
             }
         })
+
+        const totalCount = await prisma.producto.count({ where })
+        const totalPages = Math.ceil(totalCount / take)
+
 
         const formatproduct = products.map((p) => {
 
@@ -195,7 +214,12 @@ export const getProductCategory = async ({
 
         return {
             ok: true,
-            products: formatproduct
+            products: formatproduct,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalCount
+            }
         }
 
     } catch (error) {

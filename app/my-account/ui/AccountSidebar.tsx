@@ -16,14 +16,17 @@ const links = [
     { label: "Configuración de la cuenta", href: "/my-account/configuracion", icon: Settings },
 ];
 
-const AccountSidebar = () => {
+interface Props {
+    className?: string
+}
+const AccountSidebar = ({ className }: Props) => {
     const pathname = usePathname()
     const { data: session, status } = useSession()
 
 
     // console.log(isActive.get(""))
     return (
-        <div className='w-full md:w-2xs bg-white border shadow-xl border-gray-200 rounded-xs'>
+        <div className={`w-[400px] bg-white border shadow-xl border-gray-200 rounded-xs ${className} `}>
             <div className='h-32 flex items-center justify-center bg-violet-50'>
                 {status === "loading" ? (
                     <h3>Cargando...</h3>

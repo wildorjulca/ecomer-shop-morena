@@ -161,10 +161,10 @@ const GenderCategoriesSlider = ({ gender }: Props) => {
                     {categories.map((category) => (
                         <SwiperSlide
                             key={category.id}
-                            className="!flex justify-center"
+                            className="flex justify-center"
                         >
                             <Link
-                                href={`/gender/${gender}/${category.slug}`}
+                                href={`/genero/${gender}/${category.slug}`}
                                 className="flex flex-col items-center group"
                             >
                                 <div

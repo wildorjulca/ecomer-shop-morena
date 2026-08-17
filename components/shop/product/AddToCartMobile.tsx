@@ -18,7 +18,7 @@ const AddToCartMobile = ({
     onValueQuantityChanged
 }: Props) => {
     return (
-        <div className={`fixed bottom-0 left-0 z-50 bg-white  p-3 ${className}`}>
+        <div className={`fixed bottom-0 left-0 z-30 bg-white  p-3 ${className}`}>
 
             <div className="flex items-center justify-between gap-3">
 

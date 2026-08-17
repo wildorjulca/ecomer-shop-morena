@@ -9,6 +9,8 @@ import { useCartStore } from "@/src/store/cart/cart-store"
 import { useCartSummary } from "@/src/hooks"
 import { useSession } from "next-auth/react"
 import AuthenticatedPopover from "./AuthenticatedPopover"
+import MenuDrawer from "@/components/shop/drawer/menu/MenuDrawer"
+import SearchBarMovile from "./SearchBarMovile"
 
 interface Props {
   className?: string
@@ -18,6 +20,7 @@ const HeaderMobile = ({ className }: Props) => {
   const { status, data: session } = useSession()
   const { itemsInCart } = useCartSummary()
   const [openCart, setOpenCart] = useState(false)
+  const [openMenu, setOpenMenu] = useState(false)
 
   const [scrolled, setScrolled] = useState(false)
 
@@ -60,7 +63,10 @@ const HeaderMobile = ({ className }: Props) => {
         >
 
           {/* MENU */}
-          <Menu className="w-6 h-6 cursor-pointer text-gray-300" />
+          <Menu
+            onClick={() => setOpenMenu(true)}
+            className="w-6 h-6 cursor-pointer text-gray-300"
+          />
 
           {/* LOGO PRO */}
           <div className="flex-1 flex justify-center">
@@ -119,21 +125,8 @@ const HeaderMobile = ({ className }: Props) => {
 
           </div>
         </div> */}
-        <div className="flex-1 flex justify-center px-3 pb-1.5">
-          <div className="w-full max-w-[600px] relative">
-
-            <input
-              type="text"
-              placeholder="Buscar productos"
-              className="w-full h-[42px] bg-gray-100 rounded-sm pl-4 pr-12 text-sm text-black placeholder:text-gray-500 placeholder:text-base focus:outline-none"
-            />
-
-            {/* ICONO */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#6a6a6a] h-[42px] w-[45px] flex items-center justify-center  cursor-pointer">
-              <Search size={20} className=" text-white" />
-            </div>
-
-          </div>
+        <div className="flex-1 flex justify-center px-3 relative pb-1.5">
+          <SearchBarMovile />
         </div>
 
         {/* 📍 UBICACIÓN */}
@@ -146,6 +139,12 @@ const HeaderMobile = ({ className }: Props) => {
         <CartDrawer
           isOpen={openCart}
           onClose={() => setOpenCart(false)}
+        />
+
+        {/*  Menu */}
+        <MenuDrawer
+          isOpen={openMenu}
+          onClose={() => setOpenMenu(false)}
         />
 
       </header>

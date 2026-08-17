@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, X } from "lucide-react"
 import { FilterView } from "../../gender/GendeHeaderFilters"
 
 
@@ -8,9 +8,19 @@ interface Props {
     setView: (
         view: FilterView
     ) => void
+
+    onClose: () => void
 }
 
 const filters = [
+    {
+        key: "category",
+        label: "Categorias"
+    },
+    {
+        key: "gender",
+        label: " Género"
+    },
     {
         key: "brands",
         label: "Marcas"
@@ -20,41 +30,27 @@ const filters = [
         label: "Tallas"
     },
     {
-        key: "gender",
-        label: " Género"
-    },
-    {
-        key: "category",
-        label: "Categorias"
-    },
-    {
         key: "ordenar-por",
         label: "Ordernar por"
     }
 ]
 
 const FiltersMain = ({
-    setView
+    setView,
+    onClose
 }: Props) => {
 
     return (
 
         <div>
-
-            <div
-                className="
-          h-[64px]
-          border-b
-          px-5
-          flex
-          items-center
-        "
-            >
-
+            <div className="h-[64px] border-b px-5 flex items-center justify-between">
                 <h2 className="text-[24px] font-semibold">
-                    Filtros
+                    Filtrar
                 </h2>
-
+                <X className="cursor-pointer"
+                    size={30}
+                    onClick={onClose}
+                />
             </div>
 
             <div>

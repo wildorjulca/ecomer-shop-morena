@@ -1,114 +1,109 @@
 'use client'
 
-import { Search, Heart, ShoppingBag } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import CartDrawer from "@/components/shop/drawer/cart/CartDrawer";
-import UnauthenticatedPopover from "./UnauthenticatedPopover";
-import AuthenticatedPopover from "./AuthenticatedPopover";
-import SearchBarDesktop from "./SearchBarDesktop";
-import { useCartSummary, useCountFavorites } from "@/src/hooks";
-import { useCartStore } from "@/src/store/cart/cart-store";
-// import { useCartStore } from "@/src/store/cart/cart-store";
-// import { useCartSummary } from "@/src/hooks";
+import { Heart, Menu, ShoppingBag } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { useState } from 'react'
+
+import CartDrawer from '@/components/shop/drawer/cart/CartDrawer'
+import SearchBarDesktop from './SearchBarDesktop'
+import UnauthenticatedPopover from './UnauthenticatedPopover'
+import AuthenticatedPopover from './AuthenticatedPopover'
+
+import { useCartSummary, useCountFavorites } from '@/src/hooks'
 
 interface Props {
-  className?: string;
+  className?: string
 }
 
 const HeaderDesktop = ({ className }: Props) => {
-
-
   const { data: favoritesCount = 0, isLoading } = useCountFavorites()
-  const { itemsInCart, subTotal } = useCartSummary()
+  const { itemsInCart } = useCartSummary()
 
-  const [openCart, setOpenCart] = useState(false);
-  const { data: session } = useSession();
+  const [openCart, setOpenCart] = useState(false)
 
-  const isAuthenticated = !!session;
-
-
+  const { data: session } = useSession()
+  const isAuthenticated = !!session
 
   return (
-    <header className={`fixed top-0 left-0 w-full h-[70px] z-50 bg-[#111111f6] text-white ${className}`}>
-
-      <div className="max-w-[1200px] mx-auto flex items-center h-[70px]">
-
+    <header
+      className={`fixed top-0 left-0 z-50 h-[70px] w-full bg-[#111111f6] text-white ${className}`}
+    >
+      <div
+        className="mx-auto grid h-[70px] max-w-[1200px]
+        grid-cols-[240px_1fr_220px] items-center gap-4 px-4"
+      >
         {/* LOGO + MENU */}
-        <div className="flex items-center">
-          <Link href={"/"} className="text-2xl font-bold tracking-widest mr-6 uppercase text-gray-300">
+        <div className="flex items-center min-w-0">
+          <Link
+            href="/"
+            className="mr-6 shrink-0 text-2xl font-bold uppercase tracking-widest text-gray-300"
+          >
             asos
           </Link>
 
-          <div className="flex h-[50px]">
-            <Link href="/genero/Mujer" className="flex items-center px-6 text-sm font-medium border-r border-slate-300">
+          <div className="flex h-[50px] items-center">
+            <Link
+              href="/genero/mujer"
+              className="flex h-full items-center border-r border-slate-500 px-4 text-sm font-medium hover:text-gray-300"
+            >
               MUJER
             </Link>
 
-            <Link href="/genero/Hombre" className="flex items-center px-6 text-sm font-medium">
+            <Link
+              href="/genero/hombre"
+              className="flex h-full items-center px-4 text-sm font-medium hover:text-gray-300"
+            >
               HOMBRE
             </Link>
           </div>
+
         </div>
 
         {/* SEARCH */}
-        <SearchBarDesktop />
+        <div className="flex justify-center">
+          <SearchBarDesktop maxWidth="580px" />
+        </div>
 
         {/* ICONOS */}
-        <div className="flex items-center gap-5">
-
+        <div className="flex items-center justify-end gap-4">
           {!isAuthenticated ? (
             <UnauthenticatedPopover />
           ) : (
-            <AuthenticatedPopover name={session?.user?.name ?? ""} />
+            <AuthenticatedPopover name={session?.user?.name ?? ''} />
           )}
 
           <Link href="/listFavorites" className="relative">
-            <Heart className="w-6 h-6 cursor-pointer" />
+            <Heart className="h-6 w-6 cursor-pointer" />
 
-            {isLoading ? (
-              <span className="absolute -top-2 -right-2 w-5 h-4 rounded-full bg-gray-400 animate-pulse" />
-            ) : (
-              favoritesCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-1.5 rounded-full">
-                  {favoritesCount}
-                </span>
-              )
+            {!isLoading && favoritesCount > 0 && (
+              <span className="absolute -right-2 -top-2 rounded-full bg-red-500 px-1.5 text-xs">
+                {favoritesCount}
+              </span>
             )}
           </Link>
 
-
-
-
-
-          {/* <ShoppingBag
+          <button
             onClick={() => setOpenCart(true)}
-            className="w-6 h-6 cursor-pointer"
-          /> */}
-          <div className="relative">
-            <ShoppingBag
-              onClick={() => setOpenCart(true)}
-              className="w-6 h-6 cursor-pointer"
-            />
+            className="relative"
+          >
+            <ShoppingBag className="h-6 w-6 cursor-pointer" />
 
             {itemsInCart > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-1.5 rounded-full">
+              <span className="absolute -right-2 -top-2 rounded-full bg-red-500 px-1.5 text-xs">
                 {itemsInCart}
               </span>
             )}
-          </div>
+          </button>
         </div>
-
       </div>
 
       <CartDrawer
         isOpen={openCart}
         onClose={() => setOpenCart(false)}
       />
-
     </header>
-  );
-};
+  )
+}
 
-export default HeaderDesktop;
+export default HeaderDesktop

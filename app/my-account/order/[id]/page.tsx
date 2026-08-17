@@ -45,7 +45,7 @@ const OrderIdPage = async ({ params }: Props) => {
             <div className='w-full flex flex-col md:flex-row md:items-center md:justify-between gap-3'>
                 <div>
                     <h3 className='text-2xl md:text-3xl'>Detalle del pedido</h3>
-                    <Link className='flex items-center gap-1.5 underline' href={"/my-account/orders"}>
+                    <Link className='flex items-center gap-1.5 underline' href={"/my-account/mis-compras"}>
                         <ArrowLeft /> a pedidos
                     </Link>
                 </div>

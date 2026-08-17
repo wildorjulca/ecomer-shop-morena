@@ -1,13 +1,66 @@
 'use client'
 
+import { getImageSrc } from '@/src/utils/getImageSrc'
+import { CldImage } from 'next-cloudinary'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+
+
+
+interface ProductImageProps {
+  url: string
+  zoom: {
+    scale: number
+    x: number
+    y: number
+  }
+}
+
+const ProductImage = ({ url, zoom }: ProductImageProps) => {
+  const isCloudinary = url.includes("res.cloudinary.com")
+
+  if (isCloudinary) {
+    return (
+      <CldImage
+        alt={url}
+        src={getImageSrc(url)}
+        fill
+        removeBackground
+        quality={100}
+        sizes="(max-width: 768px) 100vw, 80vw"
+        className="object-contain p-6 transition-transform duration-200"
+        style={{
+          transform: `scale(${zoom.scale})`,
+          transformOrigin: `${zoom.x}% ${zoom.y}%`
+        }}
+      />
+    )
+  }
+
+  return (
+    <Image
+      alt={url}
+      src={getImageSrc(url)}
+      fill
+      priority
+      quality={100}
+      sizes="(max-width: 768px) 100vw, 80vw"
+      className="object-contain p-6 transition-transform duration-200"
+      style={{
+        transform: `scale(${zoom.scale})`,
+        transformOrigin: `${zoom.x}% ${zoom.y}%`
+      }}
+    />
+  )
+}
+
+
+
 
 interface Props {
   images: string[]
   loading?: boolean
 }
-
 const ProductGalleryDesktop = ({ images, loading }: Props) => {
 
   const [selectedImage, setSelectedImage] = useState(
@@ -21,8 +74,8 @@ const ProductGalleryDesktop = ({ images, loading }: Props) => {
 
   const [zoom, setZoom] = useState({
     scale: 1,
-    x: 50,
-    y: 50
+    x: 200,
+    y: 200
   })
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -45,6 +98,8 @@ const ProductGalleryDesktop = ({ images, loading }: Props) => {
       y: 50
     })
   }
+
+
 
   return (
     <div className="grid grid-cols-[90px_1fr] gap-1 w-full">
@@ -79,12 +134,36 @@ const ProductGalleryDesktop = ({ images, loading }: Props) => {
                     : "border-transparent hover:border-gray-300"}
                 `}
               >
-                <Image
+
+                {
+
+                  img.includes("res.cloudinary.com") ? (
+                    <CldImage
+                      alt={img}
+                      src={getImageSrc(img)}
+                      fill
+                      removeBackground={true}
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-contain transition duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <Image
+                      alt={img}
+                      src={`${getImageSrc(img)}`}
+                      fill
+                      className={`object-contain transition duration-300 group-hover:scale-105`}
+                    />
+
+                  )
+                }
+
+
+                {/* <Image
                   src={`/images/products/${img}`}
                   alt=""
                   fill
                   className="object-contain p-1"
-                />
+                /> */}
               </button>
             ))}
           </>
@@ -101,19 +180,23 @@ const ProductGalleryDesktop = ({ images, loading }: Props) => {
         {loading ? (
           <div className="w-full h-[650px] bg-gray-200 animate-pulse" />
         ) : (
-          <Image
-            key={selectedImage}
-            src={`/images/products/${selectedImage}`}
-            alt=""
-            fill
-            priority
-            quality={100}
-            className="object-contain p-6 transition-transform duration-200"
-            style={{
-              transform: `scale(${zoom.scale})`,
-              transformOrigin: `${zoom.x}% ${zoom.y}%`
-            }}
+          <ProductImage
+            url={selectedImage}
+            zoom={zoom}
           />
+          // <Image
+          //   key={selectedImage}
+          //   src={`/images/products/${selectedImage}`}
+          //   alt=""
+          //   fill
+          //   priority
+          //   quality={100}
+          //   className="object-contain p-6 transition-transform duration-200"
+          //   style={{
+          //     transform: `scale(${zoom.scale})`,
+          //     transformOrigin: `${zoom.x}% ${zoom.y}%`
+          //   }}
+          // />
         )}
 
       </div>

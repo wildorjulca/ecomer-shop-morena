@@ -112,14 +112,14 @@ const SearchBarMovile = () => {
                     onChange={handleChange}
                     onFocus={() => trimmedValue.length > 0 && setOpen(true)}
                     placeholder="Buscar productos"
-                    className="h-[40px] w-full rounded-sm bg-gray-100
+                    className="h-[38px] w-full rounded-sm bg-gray-100
           pl-4 pr-12 text-sm text-black placeholder:text-gray-500
           placeholder:text-base focus:outline-none"
                 />
 
                 <button
                     type="submit"
-                    className="absolute right-0 top-1/2 flex h-[40px] w-[45px]
+                    className="absolute right-0 top-1/2 flex h-[38px] w-[45px]
           -translate-y-1/2 items-center justify-center
           bg-[#6a6a6a] cursor-pointer"
                 >

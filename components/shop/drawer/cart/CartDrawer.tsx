@@ -85,7 +85,7 @@ const CartDrawer = ({ isOpen, onClose }: Props) => {
 
                 {/* Footer */}
                 {cart.length > 0 && (
-                    <div className="shrink-0 p-4 pb-6 bg-white space-y-3 border-t">
+                    <div className="shrink-0 p-4 pb-6 absolute bottom-0 left-0 right-0 bg-white space-y-3 border-t">
 
                         {/* Subtotal */}
                         <div className="flex justify-between items-center font-semibold text-sm">

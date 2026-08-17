@@ -50,21 +50,22 @@ const MenuDrawer = ({ isOpen, onClose }: Props) => {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
             >
                 {/* Header */}
-                <div className="border-b bg-black p-4">
+                <div className="border-b  p-4">
                     <div className=" flex items-center justify-between">
-                        <h2 className="font-semibold text-2xl text-white">
+                        <h2 className="font-semibold text-2xl text-black">
                             ASOS
                         </h2>
 
 
                         <button onClick={onClose}>
-                            <X size={25} className="text-white" />
+                            <X size={25} className="text-black" />
                         </button>
                     </div>
                     {/* {isAuthenticated && <span className='text-sm text-purple-50'>Hola {data.user.name}!</span>} */}
 
                     {!isAuthenticated && (
-                        <button className="w-full bg-[#4c77a7] py-3 text-sm font-bold text-white">
+                        <button className="w-full bg-brand mt-2 py-3 text-sm font-bold text-white">
+                             {/* <button className="w-full bg-[#4c77a7] py-3 text-sm font-bold text-white"></button> */}
                             INICIA SESIÓN O REGÍSTRATE
                         </button>
                     )}

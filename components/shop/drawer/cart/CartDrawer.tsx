@@ -71,7 +71,7 @@ const CartDrawer = ({ isOpen, onClose }: Props) => {
                 {/* 📱 Header mobile */}
                 <div className="flex items-center justify-between p-4 border-b md:hidden">
                     <h2 className="font-semibold text-lg">Mi carrito</h2>
-                    <button onClick={onClose} className="text-xl"><X offset={1}/> </button>
+                    <button onClick={onClose} className="text-xl"><X offset={1} /> </button>
                 </div>
 
                 {/* Contenido */}
@@ -85,7 +85,7 @@ const CartDrawer = ({ isOpen, onClose }: Props) => {
 
                 {/* Footer */}
                 {cart.length > 0 && (
-                    <div className="p-4 bg-white space-y-3 border-t">
+                    <div className="shrink-0 p-4 pb-6 bg-white space-y-3 border-t">
 
                         {/* Subtotal */}
                         <div className="flex justify-between items-center font-semibold text-sm">

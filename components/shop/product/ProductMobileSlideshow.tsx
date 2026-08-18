@@ -18,7 +18,7 @@ interface Props {
 export const ProductMobileSlideshow = ({ product, images }: Props) => {
 
     return (
-        <div className="w-full bg-[#F1F1F1]">
+        <div className="w-full relative bg-[#F1F1F1] mt-10">
             <AddTofavorites
                 isFavorite={false}
                 product_id={product.id}

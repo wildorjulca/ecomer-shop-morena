@@ -13,7 +13,9 @@ const Provider = ({ children }: Props) => {
     return (
         <QueryClientProvider client={queryClient}>
             <SessionProvider>
+                {/* <Toaster richColors /> */}
                 <Toaster richColors />
+
                 {children}
             </SessionProvider>
         </QueryClientProvider>

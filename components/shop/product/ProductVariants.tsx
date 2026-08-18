@@ -229,6 +229,9 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
             }
 
             addProduct(itemProduct)
+            toast.success("Producto agregado", {
+                position: "top-center"
+            })
         } finally {
             setloadingToCartStock(false)
         }

@@ -3,13 +3,13 @@ import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../generated/prisma/client";
 
-const adapter = new PrismaMariaDb({
-    host: "localhost",
-    user: "root",
-    password: "wildor",
-    database: "shop_morena",
-    connectionLimit: 5
-});
+// const adapter = new PrismaMariaDb({
+//     host: "localhost",
+//     user: "root",
+//     password: "wildor",
+//     database: "shop_morena",
+//     connectionLimit: 5
+// });
 
 
 
@@ -47,17 +47,17 @@ const adapter = new PrismaMariaDb({
 //     // connectionLimit: 5,
 // });
 
-// const adapter = new PrismaMariaDb({
-//   host: process.env.DATABASE_HOST!,
-//   user: process.env.DATABASE_USER!,
-//   password: process.env.DATABASE_PASSWORD!,
-//   database: process.env.DATABASE_NAME!,
-//   port: Number(process.env.DATABASE_PORT ?? 3306),
+const adapter = new PrismaMariaDb({
+  host: process.env.DATABASE_HOST!,
+  user: process.env.DATABASE_USER!,
+  password: process.env.DATABASE_PASSWORD!,
+  database: process.env.DATABASE_NAME!,
+  port: Number(process.env.DATABASE_PORT ?? 3306),
 
-//   // connectionLimit: 5,
-//   acquireTimeout: 10000,
-//   connectTimeout: 10000,
-// });
+  // connectionLimit: 5,
+  acquireTimeout: 10000,
+  connectTimeout: 10000,
+});
 
 const prisma = new PrismaClient({ adapter });
 

@@ -51,7 +51,7 @@ const CartDrawer = ({ isOpen, onClose }: Props) => {
             {/* Drawer */}
             <div
                 className={`
-                    fixed z-50 h-screen  bg-white text-black flex flex-col shadow-2xl transition-all duration-300 ease-in-out
+                    fixed z-40  bg-white text-black flex flex-col shadow-2xl transition-all duration-300 ease-in-out
                     
                     /* 📱 MOBILE */
                     top-0 right-0 bottom-0 w-full h-screen rounded-none

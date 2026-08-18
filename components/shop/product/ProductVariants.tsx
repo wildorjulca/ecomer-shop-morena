@@ -313,7 +313,7 @@ const ProductVariants = ({ product, images, colorId, setColorId }: Props) => {
             />
 
             <AddToCartMobile
-                className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md p-3 md:hidden"
+                className="fixed shadow-2xl bottom-0 border border-t left-0 w-full z-30 bg-white p-3 md:hidden"
                 loadingStock={loadingToCartStock}
                 handleAddToCart={handleAddToCart}
                 quantity={quantity}

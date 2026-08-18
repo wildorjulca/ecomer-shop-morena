@@ -25,7 +25,7 @@ const OrderSumary = () => {
                     <p>S/ {subTotal.toFixed(2)}</p>
                 </div>
 
-                <Link href={"/checkout-payment"} className="mt-4 flex items-center justify-center bg-[#6A148E] w-full py-2.5 rounded-3xl text-slate-50 font-medium hover:opacity-90 transition">
+                <Link href={"/checkout-payment"} className="mt-4 flex items-center justify-center bg-[#6A148E] hover:bg-[#5a1777] w-full py-2.5 rounded-3xl text-slate-50 font-medium hover:opacity-90 transition">
                     Continuar con la compra
                 </Link>
 

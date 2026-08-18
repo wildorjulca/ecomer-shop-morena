@@ -16,10 +16,7 @@ export default function PaymentMethod() {
 
                 {/* TITULO */}
                 <div className="mb-5">
-                    <h2 className="text-[22px] font-semibold text-gray-900">
-                        Indicaciones de pago
-                    </h2>
-
+                    <h3 className="text-[22px] font-medium"> Indicaciones de pago</h3>
                     <p className="text-sm text-gray-500 mt-1">
                         Selecciona el método de pago y sigue las instrucciones
                         para completar tu operación de forma segura.

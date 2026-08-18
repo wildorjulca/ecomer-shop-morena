@@ -28,7 +28,7 @@ const CartPage = async () => {
     return (
         <div className='bg-[#F1F1F1] w-full min-h-screen'>
 
-            <div className="max-w-[1200px] mx-auto w-full mt-8 
+            <div className="max-w-[1200px] mx-auto w-full mt-16  md:mt-8 
                 grid grid-cols-1 md:grid-cols-9 gap-6 px-4 md:px-0">
 
                 {/* LEFT */}

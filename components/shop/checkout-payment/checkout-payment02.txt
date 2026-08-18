@@ -7,9 +7,8 @@ import { useFormContext, SubmitHandler } from "react-hook-form"
 import { useEffect, useRef, useState } from "react"
 import clsx from "clsx"
 import { useSession } from "next-auth/react"
-import { CreditCard, ShieldCheck } from "lucide-react"
+import { CreditCard } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { toast } from "sonner"
 
 /* ============================================================
    TIPOS DE CULQI (SDK externo sin types oficiales)
@@ -64,7 +63,6 @@ const CheckoutPaymentButton = ({ onOrderCreated }: Props) => {
     } | null>(null)
 
     const [isProcessing, setIsProcessing] = useState(false)
-    const [isConfirming, setIsConfirming] = useState(false) // overlay de "Confirmando pago"
     const [error, setError] = useState<string | null>(null)
 
     /* ============================================================
@@ -142,8 +140,7 @@ const CheckoutPaymentButton = ({ onOrderCreated }: Props) => {
 
         /* ============================================================
            3. CALLBACK DE CULQI
-           👉 Se ejecuta cuando Culqi genera el token o hay error
-           👉 Cerramos Culqi PRIMERO, luego procesamos en backend
+           👉 se ejecuta cuando usuario termina el pago
         ============================================================ */
         instance.culqi = async () => {
 
@@ -151,28 +148,16 @@ const CheckoutPaymentButton = ({ onOrderCreated }: Props) => {
             if (!instance.token) {
                 setError(instance.error?.user_message || "Error en el pago")
                 instance.close()
-                setIsProcessing(false)
                 return
             }
 
             const token = instance.token.id
 
-            /* --------------------------------------------------------
-               ✅ PASO 1: Cerrar Culqi INMEDIATAMENTE
-               👉 El usuario ve la pantalla libre al instante
-            -------------------------------------------------------- */
-            instance.close()
-
-            /* --------------------------------------------------------
-               ✅ PASO 2: Mostrar overlay de "Confirmando pago..."
-               👉 Bloquea la UI mientras el backend procesa el cobro
-            -------------------------------------------------------- */
-            setIsConfirming(true)
-
             try {
-                /* --------------------------------------------------------
-                   ✅ PASO 3: Enviar token al backend para el cobro real
-                -------------------------------------------------------- */
+                /* ========================================================
+                   4. ENVIAR TOKEN AL BACKEND
+                   👉 AQUÍ ocurre el cobro real (IMPORTANTE)
+                ======================================================== */
                 const res = await fetch("/api/culqi/charge", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -188,30 +173,25 @@ const CheckoutPaymentButton = ({ onOrderCreated }: Props) => {
                 const result = await res.json()
 
                 if (!result.ok) {
-                    setIsConfirming(false)
-                    setIsProcessing(false)
-                    setError(result.message || "No se pudo procesar el pago")
-                    toast.error(result.message || "No se pudo procesar el pago")
+                    setError(result.message)
+                    instance.close()
                     return
                 }
 
-                /* --------------------------------------------------------
-                   ✅ PASO 4: Pago exitoso → toast + redirección inmediata
-                   👉 router.replace evita que el usuario vuelva atrás
-                   👉 El overlay se mantiene hasta que la página cambie
-                -------------------------------------------------------- */
-                toast.success("¡Pago realizado con éxito!", {
-                    description: "Te redirigiremos a tu confirmación.",
-                    duration: 3000,
-                })
+                /* ========================================================
+                   5. PAGO EXITOSO
+                   👉 aquí puedes redirigir o limpiar carrito
+                ======================================================== */
+                console.log("✅ Pago exitoso")
 
-                router.replace(`/success?orderId=${data.orderId}`)
+                instance.close()
 
-            } catch {
-                setIsConfirming(false)
-                setIsProcessing(false)
-                setError("Error procesando el pago. Intenta nuevamente.")
-                toast.error("Error procesando el pago")
+                // 👉 ejemplo: redirección a success page
+                router.push(`/success?orderId=${data.orderId}`)
+
+            } catch (err) {
+                setError("Error procesando pago")
+                instance.close()
             }
         }
 
@@ -280,8 +260,7 @@ const CheckoutPaymentButton = ({ onOrderCreated }: Props) => {
             -------------------------------------------------------- */
             setTimeout(() => {
                 culqiRef.current?.open()
-                // ✅ Mantenemos isProcessing=true mientras Culqi esté abierto
-                // se apagará dentro del callback de Culqi (éxito o error)
+                setIsProcessing(false)
             }, 300)
 
         } catch (err) {
@@ -312,41 +291,6 @@ const CheckoutPaymentButton = ({ onOrderCreated }: Props) => {
     ============================================================ */
     return (
         <>
-            {/* =====================================================
-                OVERLAY: Confirmando pago
-                👉 Aparece cuando Culqi ya cerró y el backend procesa
-                👉 Bloquea toda la pantalla como hacen Mercado Pago,
-                   Stripe, etc. para evitar doble click / confusión
-            ===================================================== */}
-            {isConfirming && (
-                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center  bg-black/40">
-                    <div className="flex flex-col items-center gap-5 px-6 rounded-4xl text-center bg-white py-6 shadow-2xl">
-
-                        {/* Spinner */}
-                        <div className="relative h-16 w-16">
-                            <div className="absolute inset-0 rounded-full border-4 border-purple-100" />
-                            <div className="absolute inset-0 rounded-full border-4 border-[#6A148E] border-t-transparent animate-spin" />
-                        </div>
-
-                        {/* Texto */}
-                        <div>
-                            <h3 className="text-neutral-800 text-[17px] font-semibold">
-                                Confirmando tu pago...
-                            </h3>
-                            <p className="text-sm text-neutral-600 mt-1">
-                                Por favor no cierres esta ventana
-                            </p>
-                        </div>
-
-                        {/* Badge de seguridad */}
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                            <ShieldCheck className="w-4 h-4 text-green-500" />
-                            <span>Pago seguro con cifrado SSL</span>
-                        </div>
-
-                    </div>
-                </div>
-            )}
             {/* ERROR */}
             {error && (
                 <p className="text-red-500 text-sm mb-2">{error}</p>

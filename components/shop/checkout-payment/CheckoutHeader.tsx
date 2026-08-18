@@ -20,7 +20,6 @@ const CheckoutHeader = ({ currentStep = 3 }: Props) => {
       className="
         fixed top-0 left-0 w-full
         h-[60px]
-        z-50
         bg-[#ffffff]
         text-black
         shadow-[0_2px_8px_#00000040]

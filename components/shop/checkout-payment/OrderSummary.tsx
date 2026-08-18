@@ -15,7 +15,7 @@ export const OrderSummary = ({ onOrderCreated }: Props) => {
   const { cart } = useCartStore()
 
   const subtotal = cart.reduce((acc, item) => acc + item.precio, 0)
-  const shipping = 20
+  const shipping = 10
   const total = subtotal + shipping
 
   return (

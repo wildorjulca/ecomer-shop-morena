@@ -25,7 +25,7 @@ export default function AddressModal({ addresses, open, onClose }: Props) {
 
 
     return (
-        <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <div className="bg-white w-[400px] h-[600px] border shadow-lg flex flex-col overflow-hidden">
 
                 {/* HEADER */}

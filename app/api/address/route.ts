@@ -6,8 +6,6 @@ export async function GET() {
 
   const userId = Number(session?.user?.id)
 
-  console.log({ userId })
-
   if (!userId) {
     return Response.json({ error: "No auth" }, { status: 401 })
   }

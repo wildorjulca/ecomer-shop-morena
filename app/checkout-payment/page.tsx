@@ -23,7 +23,7 @@ const CheckoutPaymentPage = () => {
     return (
         <FormProvider {...methods}>
             <form className='w-full'>
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 mb-10 md:mb-0">
 
                     {/* IZQUIERDA */}
                     <div className='pb-[180px] lg:pb-0'>
@@ -49,11 +49,12 @@ const CheckoutPaymentPage = () => {
                     <div
                         className="
                             lg:hidden
+
                             fixed
                             bottom-0
                             left-0
                             w-full
-                            z-50
+                            z-40
                             bg-white
                             border-t
                             border-gray-200

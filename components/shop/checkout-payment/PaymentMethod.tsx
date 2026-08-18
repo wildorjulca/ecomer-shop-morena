@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function PaymentMethod() {
-    const [openMethod, setOpenMethod] = useState<string | null>("yape");
+    const [openMethod, setOpenMethod] = useState<string | null>(null);
 
     const toggleMethod = (method: string) => {
         setOpenMethod(openMethod === method ? null : method);

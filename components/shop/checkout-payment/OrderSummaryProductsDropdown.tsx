@@ -24,6 +24,14 @@ const OrderSummaryProductsDropdown = ({ onOrderCreated }: Props) => {
     return (
         <div className="border-b border-gray-300">
 
+
+            {/* <div
+                className={`
+                    fixed inset-0 z-30 bg-black/40
+                    transition-opacity duration-300
+                    ${open ? 'opacity-100 visible' : 'opacity-0 invisible'}
+                `} */}
+
             {/* HEADER */}
             <button
                 type="button"

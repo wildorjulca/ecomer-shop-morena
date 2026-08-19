@@ -4,6 +4,7 @@ import HeroSlideShow from '@/components/shop/slideshow/HeroSlideShow'
 import Image from 'next/image'
 import HomeOffersSlideshow from '@/components/shop/home/HomeOffersSlideshow'
 import HomeAccesorioSlideshow from '@/components/shop/home/HomeAccesorioSlideshow'
+import HomeFootwearAccesorioShowcase from '@/components/shop/home/HomeFootwearAccesorioShowcase'
 
 const page = () => {
     return (
@@ -43,6 +44,7 @@ const page = () => {
 
                 <HomeFootwearBrandShowcase />
                 <HomeAccesorioSlideshow />
+                <HomeFootwearAccesorioShowcase />
                 <HomeOffersSlideshow />
 
             </div>

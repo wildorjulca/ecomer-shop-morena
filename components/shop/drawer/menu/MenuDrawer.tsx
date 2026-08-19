@@ -34,7 +34,7 @@ const MenuDrawer = ({ isOpen, onClose }: Props) => {
     ]
 
     return (
-        <div className="md:hidden">
+        <div className="">
             {/* Overlay */}
             {isOpen && (
                 <div

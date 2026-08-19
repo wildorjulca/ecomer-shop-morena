@@ -11,6 +11,7 @@ import UnauthenticatedPopover from './UnauthenticatedPopover'
 import AuthenticatedPopover from './AuthenticatedPopover'
 
 import { useCartSummary, useCountFavorites } from '@/src/hooks'
+import MenuDrawer from '@/components/shop/drawer/menu/MenuDrawer'
 
 interface Props {
   className?: string
@@ -21,6 +22,8 @@ const HeaderDesktop = ({ className }: Props) => {
   const { itemsInCart } = useCartSummary()
 
   const [openCart, setOpenCart] = useState(false)
+  const [openMenu, setOpenMenu] = useState(false)
+
 
   const { data: session } = useSession()
   const isAuthenticated = !!session
@@ -41,6 +44,13 @@ const HeaderDesktop = ({ className }: Props) => {
           >
             asos
           </Link>
+
+          <button
+            className='hover:cursor-pointer'
+            onClick={() => setOpenMenu(true)}
+          >
+            <Menu size={35} />
+          </button>
 
           <div className="flex h-[50px] items-center">
             <Link
@@ -101,6 +111,13 @@ const HeaderDesktop = ({ className }: Props) => {
       <CartDrawer
         isOpen={openCart}
         onClose={() => setOpenCart(false)}
+      />
+
+
+      {/* MENU */}
+      <MenuDrawer
+        isOpen={openMenu}
+        onClose={() => setOpenMenu(false)}
       />
     </header>
   )

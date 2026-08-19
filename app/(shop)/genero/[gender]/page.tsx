@@ -90,14 +90,16 @@ const GenderPage = async ({ params, searchParams }: Props) => {
         border-t
         border-gray-200
         shadow-[0_8px_20px_-10px_rgba(0,0,0,0.25)]
+        mt-10
+        md:mt-2
+
     '
             >
 
                 <div className='max-w-[1200px] mx-auto w-full mt-8'>
 
-                    <h1 className="text-2xl md:text-3xl font-semibold">
-                        {gender}
-                        <span className="text-lime-500">.</span>
+                    <h1 className="text-2xl md:text-3xl font-medium uppercase">
+                        {gender}⚡
                     </h1>
 
                     <GenderCategoriesSlider

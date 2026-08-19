@@ -54,7 +54,7 @@ const adapter = new PrismaMariaDb({
   database: process.env.DATABASE_NAME!,
   port: Number(process.env.DATABASE_PORT ?? 3306),
 
-//   connectionLimit: 5,
+//  connectionLimit: 5,
   acquireTimeout: 10000,
   connectTimeout: 10000,
 });

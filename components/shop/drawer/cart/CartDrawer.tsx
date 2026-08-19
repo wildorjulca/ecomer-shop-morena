@@ -110,6 +110,7 @@ const CartDrawer = ({ isOpen, onClose }: Props) => {
 
                         {/* BOTÓN SECUNDARIO */}
                         <Link
+                            onClick={onClose}
                             href={"/cart"}
                             className="
                                 h-12 w-full flex items-center justify-center

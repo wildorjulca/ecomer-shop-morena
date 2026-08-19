@@ -1,8 +1,9 @@
 import HomeCategories from '@/components/shop/home/HomeCategories'
 import HomeFootwearBrandShowcase from '@/components/shop/home/HomeFootwearBrandShowcase'
-import OffersSlideshow from '@/components/shop/home/OffersSlideshow'
 import HeroSlideShow from '@/components/shop/slideshow/HeroSlideShow'
 import Image from 'next/image'
+import HomeOffersSlideshow from '@/components/shop/home/HomeOffersSlideshow'
+import HomeAccesorioSlideshow from '@/components/shop/home/HomeAccesorioSlideshow'
 
 const page = () => {
     return (
@@ -41,7 +42,8 @@ const page = () => {
                 </div>
 
                 <HomeFootwearBrandShowcase />
-                <OffersSlideshow />
+                <HomeAccesorioSlideshow />
+                <HomeOffersSlideshow />
 
             </div>
 

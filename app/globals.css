@@ -156,3 +156,26 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+
+
+
+/* Swiper pagination estilo e-commerce */
+
+.swiper-pagination {
+    bottom: 0 !important;
+}
+
+.swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    opacity: 1;
+    background: #d1d5db;
+    transition: all .25s ease;
+}
+
+.swiper-pagination-bullet-active {
+    width: 22px;
+    border-radius: 999px;
+    background: #84cc16;
+}

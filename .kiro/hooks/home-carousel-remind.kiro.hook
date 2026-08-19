@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Home Carousel Reminder",
+  "description": "Cuando se edita un componente del home o una action de productos, recuerda verificar si el carrusel de accesorios del home necesita actualizarse también.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "components/shop/home/*.tsx",
+      "actions/shop/products/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Se editó un componente del home o una action de productos. Verifica si el cambio impacta el HomeAccessoriesCarousel (components/shop/home/HomeAccessoriesCarousel.tsx) o la action getAccessoriesProducts (actions/shop/products/getAccessoriesProducts.ts). Si hay algo que actualizar para mantener consistencia, hazlo."
+  }
+}

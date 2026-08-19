@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import { LoaderProvider } from "@/components/provider/LoaderProvider";
 import HeaderDesktop from "@/components/layout/shop/HeaderDesktop";
 import HeaderMobile from "@/components/layout/shop/HeaderMobile";
+import Footer from "@/components/layout/shop/Footer";
 
 export const poppins = Poppins({
     subsets: ["latin"],
@@ -32,6 +33,8 @@ export default function ShopLayout({
                 <section className="w-full flex flex-col relative top-[13px] md:top-[-50px]">
                     {children}
                 </section>
+
+                <Footer />
 
             </main>
         </LoaderProvider>

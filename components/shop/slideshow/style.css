@@ -1,122 +1,290 @@
-/* ========================= */
-/* ESTILOS BASE SWIPER */
-/* ========================= */
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
 
-.swiper {
+.hero-slider-wrapper {
     width: 100%;
-    height: 100%;
+    position: relative;
+
+    /* MUY IMPORTANTE:
+       evita que se vean los slides vecinos */
+    overflow: hidden;
 }
 
-.swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+/* =========================================
+   SWIPER
+========================================= */
+
+.heroSwiper {
+    width: 100%;
+    height: auto;
+
+    /* Espacio para la paginación */
+    padding-bottom: 32px;
+
+    overflow: hidden !important;
 }
 
-.swiper-slide img {
+
+/* =========================================
+   SLIDES
+========================================= */
+
+.heroSwiper .swiper-slide {
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
     display: block;
+
+    background: transparent;
+}
+
+
+/* =========================================
+   BANNER
+========================================= */
+
+.hero-slide {
+    position: relative;
+
     width: 100%;
-    height: 100%;
+
+    height: 350px;
+
+    margin-top: 44px;
+}
+
+
+/* Imagen */
+
+.hero-image {
     object-fit: cover;
+    object-position: center;
 }
 
-/* ========================= */
-/* PAGINACIÓN ESTILO RIPLEY */
-/* ========================= */
 
-.swiper-pagination {
-    bottom: 16px !important;
+/* =========================================
+   PAGINACIÓN
+========================================= */
+
+.heroSwiper .swiper-pagination {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: 8px !important;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    line-height: 1;
 }
 
-.swiper-pagination-bullet {
+
+/* Punto */
+
+.heroSwiper .swiper-pagination-bullet {
     width: 8px;
     height: 8px;
-    background: #d0d0d0;
+
+    margin: 0 !important;
+
+    padding: 0;
+
+    background: #d5d5d5;
+
     opacity: 1;
+
     border-radius: 50%;
-    margin: 0 5px !important;
-    transition: all 0.4s ease;
+
     cursor: pointer;
+
+    transition:
+        width 0.25s ease,
+        background-color 0.25s ease;
 }
 
-.swiper-pagination-bullet-active {
-    width: 25px;
+
+/* Punto activo */
+
+.heroSwiper .swiper-pagination-bullet-active {
+    width: 24px;
     height: 8px;
-    background: #6b2d82;
-    border-radius: 20px;
+
+    background: #6a148e;
+
+    border-radius: 999px;
 }
 
-/* ========================= */
-/* FLECHAS NAVEGACIÓN RIPLEY */
-/* ========================= */
 
-.swiper-button-next,
-.swiper-button-prev {
-    padding-top: 20px;
-    padding-bottom: 20;
-    width: 33px;
-    height: 60px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 2px;
-    backdrop-filter: blur(2px);
-    transition: all 0.3s ease;
+/* =========================================
+   FLECHAS
+========================================= */
+
+.heroSwiper .swiper-button-prev,
+.heroSwiper .swiper-button-next {
+    display: block;
+
+    position: absolute;
+
     top: 50%;
+
+    /* height: 60px; */
+
+
+    margin: 0;
+
     transform: translateY(-50%);
+
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-/* Icono interno - flechas PEQUEÑAS */
-.swiper-button-next::after,
-.swiper-button-prev::after {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 900;
-}
+    background: rgba(0, 0, 0, 0.35);
 
-/* Hover effect */
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-    background: rgba(0, 0, 0, 0.6);
-}
+    color: white;
 
-/* Posición de las flechas */
-.swiper-button-prev {
-    left: 10px;
-}
-
-.swiper-button-next {
-    right: 10px;
-}
-
-/* Remover los estilos por defecto de swiper si existen conflictos */
-.swiper-button-next:after,
-.swiper-button-prev:after {
-    font-family: swiper-icons;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0;
-    font-weight: 900;
-    display: inline-block;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Asegurar que no haya bordes */
-.swiper-button-next,
-.swiper-button-prev {
     border: none;
     outline: none;
+
+    border-radius: 0;
+
+    z-index: 10;
+
+    transition:
+        background 0.2s ease,
+        opacity 0.2s ease;
 }
 
-/* Desactivar cuando no hay siguiente/anterior slide */
-.swiper-button-disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+
+/* Flecha izquierda */
+
+.heroSwiper .swiper-button-prev {
+    left: 0;
+}
+
+
+/* Flecha derecha */
+
+.heroSwiper .swiper-button-next {
+    right: 0;
+}
+
+
+/* Iconos */
+
+.heroSwiper .swiper-button-prev::after,
+.heroSwiper .swiper-button-next::after {
+
+    font-family: swiper-icons;
+
+    font-size: 18px;
+
+    font-weight: 400;
+
+    color: white;
+
+    text-transform: none;
+
+    letter-spacing: 0;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* Hover */
+
+.heroSwiper .swiper-button-prev:hover,
+.heroSwiper .swiper-button-next:hover {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+
+/* Disabled */
+
+.heroSwiper .swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 768px) {
+
+    .hero-slide {
+        height: 400px;
+        margin-top: 8px;
+    }
+
+}
+
+
+/* =========================================
+   LARGE DESKTOP
+========================================= */
+
+@media (min-width: 1024px) {
+
+    .hero-slide {
+        height: 500px;
+        margin-top: 8px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+
+    .heroSwiper {
+        padding-bottom: 28px;
+    }
+
+    .hero-slide {
+        height: 350px;
+        margin-top: 44px;
+    }
+
+    .heroSwiper .swiper-button-prev,
+    .heroSwiper .swiper-button-next {
+
+        width: 32px;
+        height: 50px;
+    }
+
+    .heroSwiper .swiper-button-prev::after,
+    .heroSwiper .swiper-button-next::after {
+
+        font-size: 14px;
+    }
+
+    .heroSwiper .swiper-pagination {
+        bottom: 6px !important;
+    }
+
+    .heroSwiper .swiper-pagination-bullet {
+        width: 7px;
+        height: 7px;
+    }
+
+    .heroSwiper .swiper-pagination-bullet-active {
+        width: 21px;
+        height: 7px;
+    }
+
 }

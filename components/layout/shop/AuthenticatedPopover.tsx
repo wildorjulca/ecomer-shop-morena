@@ -22,6 +22,8 @@ export default function AuthenticatedPopover({ name }: { name: string }) {
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
+    const firstName = name.trim().split(/\s+/)[0]
+
     return (
         <>
             {/* 🔥 OVERLAY CON BLUR */}
@@ -41,7 +43,7 @@ export default function AuthenticatedPopover({ name }: { name: string }) {
                     onClick={() => setOpen(!open)}
                     className="flex items-center gap-2 px-3 py-2 rounded-md text-white  transition"
                 >
-                    Hola {name}!
+                    Hola  <span className=''>{firstName}!</span>
                     <ChevronDown
                         size={16}
                         className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
